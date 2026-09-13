@@ -1,0 +1,29 @@
+# Render Blueprint Infrastructure Specification
+# Single-Instance Full-Stack Deployment (React Vite + Express Node.js)
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: team-sync
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm run render-build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: AUTO_SEED
+        value: "true"

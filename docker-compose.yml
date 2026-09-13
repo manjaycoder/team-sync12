@@ -1,0 +1,67 @@
+services:
+  # Team-Sync Full-Stack Single-Instance Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: team_sync_app
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    environment:
+      - NODE_ENV=production
+      - PORT=5001
+      - MONGO_URI=mongodb://mongo:27017/team-sync
+      - JWT_SECRET=teamsync_production_secret_key_docker_2026
+      - JWT_EXPIRES_IN=7d
+      - AUTO_SEED=true
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - teamsync_network
+
+  # MongoDB Official Container
+  mongo:
+    image: mongo:7.0
+    container_name: team_sync_mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - teamsync_network
+
+  # Optional Mongo Express Database Viewer
+  mongo-express:
+    image: mongo-express:latest
+    container_name: team_sync_mongo_express
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=pass
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - teamsync_network
+
+networks:
+  teamsync_network:
+    driver: bridge
+
+volumes:
+  mongo_data:
+    driver: local

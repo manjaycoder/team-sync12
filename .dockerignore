@@ -1,0 +1,17 @@
+node_modules
+server/node_modules
+dist
+server/dist
+.git
+.gitignore
+.env
+.env.*
+server/.env
+server/.env.*
+*.log
+npm-debug.log*
+.vscode
+.idea
+README.md
+scratchpad_*.md
+RENDER_DEPLOYMENT.md
