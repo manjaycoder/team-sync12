@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { Department } from '../models/Department';
 import { User } from '../models/User';
+import { Project } from '../models/Project';
+import { Task } from '../models/Task';
 import { Activity } from '../models/Activity';
 import {
   generateWorkspaceSyncBriefing,
@@ -61,9 +63,6 @@ export const getStandup = async (req: Request, res: Response): Promise<void> => 
   }
 };
 
-// @desc    Ask Synthetix Workspace Assistant via Gemini AI
-// @route   POST /api/ai/assistant
-// @access  Public / Private
 export const askAssistant = async (req: Request, res: Response): Promise<void> => {
   try {
     const { question } = req.body;
@@ -72,17 +71,66 @@ export const askAssistant = async (req: Request, res: Response): Promise<void> =
       return;
     }
 
-    const departments = await Department.find();
-    const employees = await User.find();
+    const [departments, employees, projects, tasks, activities] = await Promise.all([
+      Department.find(),
+      User.find().select('-password'),
+      Project.find(),
+      Task.find(),
+      Activity.find().sort({ createdAt: -1 }).limit(10),
+    ]);
 
     const context = {
       totalEmployees: employees.length,
       departmentsCount: departments.length,
+      totalProjects: projects.length,
+      totalTasks: tasks.length,
+      completedTasks: tasks.filter((t) => t.status === 'completed').length,
+      inProgressTasks: tasks.filter((t) => t.status === 'in_progress').length,
+      todoTasks: tasks.filter((t) => t.status === 'todo').length,
+      aiCompletedTasks: tasks.filter((t) => t.completedByAI).length,
       departments: departments.map((d) => ({
         name: d.name,
         lead: d.leadName,
         members: d.memberCount,
         projects: d.activeProjects,
+        budget: d.budget,
+        description: d.description,
+      })),
+      employees: employees.map((e) => ({
+        name: e.name,
+        email: e.email,
+        role: e.role,
+        department: e.department,
+        status: e.status,
+      })),
+      projects: projects.map((p) => ({
+        name: p.name,
+        department: p.department,
+        lead: p.leadName,
+        priority: p.priority,
+        progress: p.progress,
+        status: p.status,
+        deadline: p.deadline,
+        budget: p.budget,
+        description: p.description,
+      })),
+      tasks: tasks.map((t) => ({
+        title: t.title,
+        project: t.projectName,
+        assignee: t.assigneeName,
+        assigneeEmail: t.assigneeEmail,
+        department: t.department,
+        status: t.status,
+        priority: t.priority,
+        dueDate: t.dueDate,
+        completedByAI: t.completedByAI,
+        aiCompletionSummary: t.aiCompletionSummary,
+      })),
+      recentActivities: activities.map((a) => ({
+        user: a.user,
+        action: a.action,
+        target: a.target,
+        timestamp: a.createdAt,
       })),
     };
 

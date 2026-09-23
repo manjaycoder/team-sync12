@@ -20,8 +20,10 @@ import { Department } from './models/Department';
 import { User } from './models/User';
 import { seedInitialData } from './scripts/seed';
 
-// Load environment variables
-dotenv.config();
+// Load environment variables: checks local server/.env and root .env
+dotenv.config({ path: path.resolve(process.cwd(), 'server/.env') });
+dotenv.config({ path: path.resolve(process.cwd(), '../server/.env') });
+dotenv.config(); // Fallback to current working directory .env
 
 const app: Application = express();
 const PORT = process.env.PORT || 5001;
@@ -134,7 +136,7 @@ const startServer = async () => {
     }
   }
 
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log(`=================================================================`);
     console.log(` 🚀 Team-Sync Full-Stack Engine running on port ${PORT}`);
     console.log(` 🌐 Endpoint: http://localhost:${PORT}`);
@@ -142,6 +144,19 @@ const startServer = async () => {
     console.log(` 📦 Mode: ${process.env.NODE_ENV || 'development'}`);
     console.log(` 🗂️  Static Frontend Serving: ${clientDistPath ? 'ENABLED' : 'DISABLED'}`);
     console.log(`=================================================================`);
+  });
+
+  server.on('error', (error: any) => {
+    if (error.code === 'EADDRINUSE') {
+      console.error(`=================================================================`);
+      console.error(` ❌ Port ${PORT} is already in use by another running process.`);
+      console.error(` 💡 Solution: Close the conflicting terminal or run:`);
+      console.error(`    npx kill-port ${PORT}`);
+      console.error(`=================================================================`);
+    } else {
+      console.error('[Server Error]:', error);
+    }
+    process.exit(1);
   });
 };
 

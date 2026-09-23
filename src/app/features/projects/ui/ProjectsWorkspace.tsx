@@ -27,7 +27,6 @@ import {
   FiCalendar,
   FiTrendingUp,
   FiTrash2,
-  FiZap,
   FiCopy,
   FiCheck,
   FiX,
@@ -261,26 +260,27 @@ export const ProjectsWorkspace: React.FC = () => {
   return (
     <div className="space-y-6 animate-fadeIn pb-12">
       {/* Top Banner & Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gradient-to-r from-[#171329] via-[#151124] to-[#120f1e] p-6 rounded-2xl border border-white/10 shadow-xl relative overflow-hidden">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-gradient-to-r from-[#17112c] via-[#120d24] to-[#0a0715] p-6 sm:p-8 rounded-3xl border border-violet-500/25 shadow-2xl relative overflow-hidden">
+        <div className="pointer-events-none absolute -right-10 -top-10 h-72 w-72 rounded-full bg-violet-600/15 blur-3xl" />
         <div className="relative z-10">
-          <div className="flex items-center gap-2 text-violet-400 font-semibold text-xs uppercase tracking-wider mb-1">
-            <FiZap className="animate-pulse" />
-            <span>Enterprise Operations & Allocation</span>
+          <div className="flex items-center gap-2 text-violet-300 font-bold text-xs uppercase tracking-wider mb-2">
+            <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
+            <span>Autonomous Operations &amp; Allocation Hub</span>
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
-            Projects & Task Allocation Hub
+          <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            Projects &amp; Task Allocation Center
           </h1>
-          <p className="text-gray-400 text-xs mt-1 max-w-2xl">
-            Distribute strategic goals, allocate workloads to team members, complete tasks with
-            1-click status transitions, and drive project deliverables.
+          <p className="text-gray-300 text-xs sm:text-sm mt-1.5 max-w-2xl leading-relaxed">
+            Distribute strategic goals, allocate workloads to team members, complete tasks autonomously with
+            Google Gemini AI, and monitor real-time delivery velocity.
           </p>
         </div>
 
-        <div className="flex items-center gap-3 relative z-10">
+        <div className="flex items-center gap-3 relative z-10 shrink-0">
           <button
             type="button"
             onClick={() => setIsProjectModalOpen(true)}
-            className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-200 hover:text-white transition shadow-sm"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs font-bold text-gray-200 hover:text-white transition shadow-sm cursor-pointer"
           >
             <FiFolder className="text-violet-400" />
             <span>New Project</span>
@@ -289,7 +289,7 @@ export const ProjectsWorkspace: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsAllocateModalOpen(true)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-xs font-semibold text-white transition shadow-lg shadow-violet-600/30"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-purple-600 hover:from-violet-500 hover:to-indigo-500 text-xs font-extrabold text-white transition shadow-lg shadow-violet-600/35 cursor-pointer"
           >
             <FiPlus size={16} />
             <span>Allocate Task</span>
@@ -298,52 +298,52 @@ export const ProjectsWorkspace: React.FC = () => {
       </div>
 
       {/* KPI Stats Row */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
-        <div className="p-4 rounded-xl bg-[#110e1d] border border-white/5">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3.5">
+        <div className="p-4.5 rounded-2xl bg-[#0d091b]/90 border border-white/[0.08] shadow-md hover:border-violet-500/30 transition">
           <div className="flex items-center justify-between text-gray-400 text-xs mb-1">
-            <span>Total Projects</span>
+            <span className="font-bold uppercase tracking-wider text-[10px]">Total Projects</span>
             <FiFolder className="text-violet-400" />
           </div>
-          <div className="text-xl font-bold text-white">{projects.length}</div>
-          <div className="text-[10px] text-gray-500 mt-1">Across 5 departments</div>
+          <div className="font-display text-2xl font-extrabold text-white">{projects.length}</div>
+          <div className="text-[10px] text-violet-300/80 mt-1 font-medium">Across 5 departments</div>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#110e1d] border border-white/5">
+        <div className="p-4.5 rounded-2xl bg-[#0d091b]/90 border border-white/[0.08] shadow-md hover:border-indigo-500/30 transition">
           <div className="flex items-center justify-between text-gray-400 text-xs mb-1">
-            <span>Allocated Tasks</span>
+            <span className="font-bold uppercase tracking-wider text-[10px]">Allocated Tasks</span>
             <FiCheckSquare className="text-indigo-400" />
           </div>
-          <div className="text-xl font-bold text-white">{totalTasksCount}</div>
-          <div className="text-[10px] text-gray-500 mt-1">Total active assignments</div>
+          <div className="font-display text-2xl font-extrabold text-white">{totalTasksCount}</div>
+          <div className="text-[10px] text-gray-400 mt-1">Active assignments</div>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#110e1d] border border-white/5">
+        <div className="p-4.5 rounded-2xl bg-[#0d091b]/90 border border-white/[0.08] shadow-md hover:border-amber-500/30 transition">
           <div className="flex items-center justify-between text-gray-400 text-xs mb-1">
-            <span>In Progress</span>
+            <span className="font-bold uppercase tracking-wider text-[10px]">In Progress</span>
             <FiClock className="text-amber-400" />
           </div>
-          <div className="text-xl font-bold text-amber-400">{inProgressCount}</div>
-          <div className="text-[10px] text-gray-500 mt-1">Actively worked on</div>
+          <div className="font-display text-2xl font-extrabold text-amber-400">{inProgressCount}</div>
+          <div className="text-[10px] text-gray-400 mt-1">Under active execution</div>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#110e1d] border border-white/5">
+        <div className="p-4.5 rounded-2xl bg-[#0d091b]/90 border border-white/[0.08] shadow-md hover:border-emerald-500/30 transition">
           <div className="flex items-center justify-between text-gray-400 text-xs mb-1">
-            <span>Completed</span>
+            <span className="font-bold uppercase tracking-wider text-[10px]">AI Completed</span>
             <FiCheckCircle className="text-emerald-400" />
           </div>
-          <div className="text-xl font-bold text-emerald-400">{completedCount}</div>
-          <div className="text-[10px] text-gray-500 mt-1">Shipped deliverables</div>
+          <div className="font-display text-2xl font-extrabold text-emerald-400">{completedCount}</div>
+          <div className="text-[10px] text-emerald-400/80 mt-1">Shipped deliverables</div>
         </div>
 
-        <div className="p-4 rounded-xl bg-[#110e1d] border border-white/5 col-span-2 lg:col-span-1">
+        <div className="p-4.5 rounded-2xl bg-[#0d091b]/90 border border-white/[0.08] shadow-md col-span-2 lg:col-span-1 hover:border-violet-500/30 transition">
           <div className="flex items-center justify-between text-gray-400 text-xs mb-1">
-            <span>Completion Rate</span>
+            <span className="font-bold uppercase tracking-wider text-[10px]">Completion Velocity</span>
             <FiTrendingUp className="text-violet-400" />
           </div>
-          <div className="text-xl font-bold text-white">{completionRate}%</div>
-          <div className="w-full bg-white/5 h-1.5 rounded-full mt-2 overflow-hidden">
+          <div className="font-display text-2xl font-extrabold text-white">{completionRate}%</div>
+          <div className="w-full bg-white/5 h-1.5 rounded-full mt-2.5 overflow-hidden">
             <div
-              className="bg-gradient-to-r from-violet-500 to-emerald-500 h-full rounded-full transition-all duration-500"
+              className="bg-gradient-to-r from-violet-500 via-indigo-500 to-emerald-400 h-full rounded-full transition-all duration-500"
               style={{ width: `${completionRate}%` }}
             />
           </div>
