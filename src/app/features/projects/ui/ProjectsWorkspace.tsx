@@ -477,8 +477,7 @@ export const ProjectsWorkspace: React.FC = () => {
                       return (
                         <div
                           key={task.id}
-                          className={`bg-[#151224] hover:bg-[#18142a] border ${isCompleted ? 'border-emerald-500/30 bg-emerald-950/10' : 'border-white/5'
-                            } hover:border-violet-500/40 rounded-xl p-3.5 shadow-md transition group`}
+                          className="bg-[#151224] hover:bg-[#18142a] border border-white/5 hover:border-violet-500/40 rounded-xl p-3.5 shadow-md transition group"
                         >
                           {/* Top Row: Quick Checkbox + Project Tag + Priority */}
                           <div className="flex items-center justify-between gap-2 mb-2">
