@@ -39,7 +39,7 @@ const DepartmentList = () => {
     if (!formData.name || !formData.leadName) return;
 
     const gradients = [
-      'from-violet-600 to-indigo-600',
+      'from-cyan-600 to-blue-600',
       'from-blue-600 to-cyan-600',
       'from-emerald-600 to-teal-600',
       'from-pink-600 to-rose-600',
@@ -89,7 +89,7 @@ const DepartmentList = () => {
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 py-2.5 text-xs font-semibold text-white shadow-lg shadow-violet-600/25 transition hover:from-violet-500 hover:to-indigo-500 self-start sm:self-auto"
+          className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 px-4 py-2.5 text-xs font-semibold text-white shadow-lg shadow-cyan-600/25 transition hover:from-cyan-500 hover:to-blue-500 self-start sm:self-auto"
         >
           <FiPlus />
           <span>New Department</span>
@@ -101,7 +101,7 @@ const DepartmentList = () => {
         {departments.map((dept) => (
           <div
             key={dept.id}
-            className="rounded-2xl border border-white/5 bg-[#12101e] overflow-hidden flex flex-col justify-between hover:border-violet-500/30 transition duration-200 group"
+            className="rounded-2xl border border-white/5 bg-[#0b141c] overflow-hidden flex flex-col justify-between hover:border-cyan-500/30 transition duration-200 group"
           >
             {/* Top Color Accent Ribbon */}
             <div className={`h-2.5 w-full bg-gradient-to-r ${dept.color}`} />
@@ -109,7 +109,7 @@ const DepartmentList = () => {
             <div className="p-6 flex-1 flex flex-col justify-between">
               <div>
                 <div className="flex items-start justify-between gap-3 mb-2">
-                  <h3 className="text-lg font-bold text-white group-hover:text-violet-300 transition-colors">
+                  <h3 className="text-lg font-bold text-white group-hover:text-cyan-300 transition-colors">
                     {dept.name}
                   </h3>
                   <button
@@ -158,7 +158,7 @@ const DepartmentList = () => {
                       <FiActivity />
                       <span>Projects</span>
                     </div>
-                    <span className="text-xs font-bold text-violet-400">{dept.activeProjects}</span>
+                    <span className="text-xs font-bold text-cyan-400">{dept.activeProjects}</span>
                   </div>
 
                   <div className="rounded-lg bg-white/[0.02] p-2">
@@ -181,7 +181,7 @@ const DepartmentList = () => {
           <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#151322] p-6 shadow-2xl animate-fadeIn">
             <div className="flex items-center justify-between pb-4 border-b border-white/10">
               <div className="flex items-center gap-2">
-                <FiLayers className="text-violet-400 text-lg" />
+                <FiLayers className="text-cyan-400 text-lg" />
                 <h3 className="font-bold text-white text-base">Create Department</h3>
               </div>
               <button
@@ -202,7 +202,7 @@ const DepartmentList = () => {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="e.g. Cyber Security"
-                  className="w-full bg-[#0d0b17] border border-white/10 rounded-xl px-3 py-2 text-gray-200 outline-none focus:border-violet-500"
+                  className="w-full bg-[#071018] border border-white/10 rounded-xl px-3 py-2 text-gray-200 outline-none focus:border-cyan-500"
                 />
               </div>
 
@@ -214,7 +214,7 @@ const DepartmentList = () => {
                   value={formData.leadName}
                   onChange={(e) => setFormData({ ...formData, leadName: e.target.value })}
                   placeholder="e.g. Taylor Swift"
-                  className="w-full bg-[#0d0b17] border border-white/10 rounded-xl px-3 py-2 text-gray-200 outline-none focus:border-violet-500"
+                  className="w-full bg-[#071018] border border-white/10 rounded-xl px-3 py-2 text-gray-200 outline-none focus:border-cyan-500"
                 />
               </div>
 
@@ -225,7 +225,7 @@ const DepartmentList = () => {
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Briefly describe the mission and focus of this department..."
-                  className="w-full bg-[#0d0b17] border border-white/10 rounded-xl px-3 py-2 text-gray-200 outline-none focus:border-violet-500"
+                  className="w-full bg-[#071018] border border-white/10 rounded-xl px-3 py-2 text-gray-200 outline-none focus:border-cyan-500"
                 />
               </div>
 
@@ -237,7 +237,7 @@ const DepartmentList = () => {
                     min={1}
                     value={formData.memberCount}
                     onChange={(e) => setFormData({ ...formData, memberCount: Number(e.target.value) })}
-                    className="w-full bg-[#0d0b17] border border-white/10 rounded-xl px-3 py-2 text-gray-200 outline-none focus:border-violet-500"
+                    className="w-full bg-[#071018] border border-white/10 rounded-xl px-3 py-2 text-gray-200 outline-none focus:border-cyan-500"
                   />
                 </div>
 
@@ -248,7 +248,7 @@ const DepartmentList = () => {
                     min={1}
                     value={formData.activeProjects}
                     onChange={(e) => setFormData({ ...formData, activeProjects: Number(e.target.value) })}
-                    className="w-full bg-[#0d0b17] border border-white/10 rounded-xl px-3 py-2 text-gray-200 outline-none focus:border-violet-500"
+                    className="w-full bg-[#071018] border border-white/10 rounded-xl px-3 py-2 text-gray-200 outline-none focus:border-cyan-500"
                   />
                 </div>
 
@@ -258,7 +258,7 @@ const DepartmentList = () => {
                     type="text"
                     value={formData.budget}
                     onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                    className="w-full bg-[#0d0b17] border border-white/10 rounded-xl px-3 py-2 text-gray-200 outline-none focus:border-violet-500"
+                    className="w-full bg-[#071018] border border-white/10 rounded-xl px-3 py-2 text-gray-200 outline-none focus:border-cyan-500"
                   />
                 </div>
               </div>
@@ -273,7 +273,7 @@ const DepartmentList = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-violet-600 text-white font-semibold hover:bg-violet-500"
+                  className="px-4 py-2 rounded-xl bg-cyan-600 text-white font-semibold hover:bg-cyan-500"
                 >
                   Create Department
                 </button>
