@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom"
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { currentLoggedEmployee } from "../features/auth/state/auth/authAction";
+import { removeEmployee } from "../features/auth/state/auth/authSlice";
 import PublicRoutes from "../layouts/protectedRoutes/PublicRoutes";
 import ProtectedRoutes from "../layouts/protectedRoutes/ProtectedRoutes";
 import PublicWebsite from "../features/public/ui/PublicWebsite";
@@ -23,14 +24,24 @@ const AppRoutes = () => {
     dispatch(currentLoggedEmployee());
   }, [dispatch]);
 
+  useEffect(() => {
+    const clearUnauthorizedSession = () => dispatch(removeEmployee());
+    window.addEventListener("team-sync:unauthorized", clearUnauthorizedSession);
+    return () => {
+      window.removeEventListener("team-sync:unauthorized", clearUnauthorizedSession);
+    };
+  }, [dispatch]);
+
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <PublicWebsite />,
-    },
-    {
-      path: "/portal",
-      element: <PublicWebsite />,
+      element: <PublicRoutes />,
+      children: [
+        {
+          index: true,
+          element: <PublicWebsite />,
+        },
+      ],
     },
     {
       path: "/login",

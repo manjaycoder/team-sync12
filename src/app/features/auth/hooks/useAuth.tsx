@@ -7,9 +7,8 @@ import {
   loginEmployee,
   registerEmployee,
   logoutEmployee,
-  DEMO_USER,
 } from "../state/auth/authAction";
-import { addEmployee, clearError } from "../state/auth/authSlice";
+import { clearError } from "../state/auth/authSlice";
 import type { RootState, AppDispatch } from "../../../routes/store";
 
 interface LoginData {
@@ -64,11 +63,6 @@ export const useAuth = () => {
     navigate("/");
   };
 
-  const loginWithDemo = () => {
-    dispatch(addEmployee(DEMO_USER));
-    navigate("/home");
-  };
-
   const clearAuthError = useCallback(() => {
     dispatch(clearError());
   }, [dispatch]);
@@ -94,7 +88,6 @@ export const useAuth = () => {
     error,
     isAuthenticated,
     handleLogout,
-    loginWithDemo,
     clearAuthError,
     navigate,
   };

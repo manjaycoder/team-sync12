@@ -1,5 +1,23 @@
 # React + TypeScript + Vite
 
+## Local test account
+
+To provision a local-only account for testing, add these values to `server/.env` and choose a private password of at least 12 characters:
+
+```dotenv
+NODE_ENV=development
+TEST_ACCOUNT_EMAIL=tester@team-sync.local
+TEST_ACCOUNT_PASSWORD=your-private-local-password
+```
+
+Then run this from the repository root:
+
+```bash
+npm --prefix server run create:test-account
+```
+
+Sign in with the email and password you configured. The command updates the password if this test account already exists and refuses to run when `NODE_ENV=production`. Do not add test-account credentials to production environment variables.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

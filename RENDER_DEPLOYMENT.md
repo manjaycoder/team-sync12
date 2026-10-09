@@ -82,8 +82,10 @@ Before deploying to Render, prepare:
    - `MONGO_URI`: Paste your MongoDB Atlas connection string.
    - `GEMINI_API_KEY`: Paste your Google Gemini API key.
    - `JWT_SECRET`: Render auto-generates a secure random key.
-   - `AUTO_SEED`: Defaults to `true` (auto-populates demo accounts and tasks on first boot).
-7. Click **Apply**. Render will automatically build and launch your full-stack instance!
+   - `AUTO_SEED`: Defaults to `false`. Enable only when you explicitly want to populate sample workspace records; seeded records do not have usable sign-in credentials.
+7. Click **Apply**. The GitHub Actions workflow builds on pushes and pull requests to `main`; successful pushes deploy through a Render deploy hook.
+8. In Render, open the `team-sync` service, create a **Deploy Hook**, and copy its URL.
+9. In GitHub, open **Settings** -> **Secrets and variables** -> **Actions**, create the repository secret `RENDER_DEPLOY_HOOK_URL`, and paste the URL. A push to `main` fails its deploy step with a clear error if this secret is missing.
 
 ---
 
@@ -118,8 +120,14 @@ If you prefer creating the service manually through the Render dashboard:
    | `JWT_SECRET` | `your_32_char_secret` | Secure random string |
    | `JWT_EXPIRES_IN` | `7d` | Session expiration |
    | `GEMINI_API_KEY` | `AIzaSy...` | Your Google Gemini API Key |
-   | `AUTO_SEED` | `true` | Populates demo data if DB is empty |
+   | `AUTO_SEED` | `false` | Optional sample workspace data; disabled by default |
 6. Click **Create Web Service**.
+7. In the Render service settings, turn off automatic deploys to let GitHub Actions gate production deploys on a successful build.
+8. Create a Render **Deploy Hook**, then add its URL to the GitHub repository as the `RENDER_DEPLOY_HOOK_URL` Actions secret.
+
+### GitHub Actions deployment
+
+The workflow at `.github/workflows/deploy-render.yml` runs on pushes and pull requests targeting `main`. It installs the locked frontend and backend dependencies and builds both applications. Pull requests only run CI; a successful push to `main` triggers deployment when `RENDER_DEPLOY_HOOK_URL` is configured. You can also run the build workflow manually with **Actions** -> **CI and Deploy to Render** -> **Run workflow**; manual runs build and validate without deploying.
 
 ---
 
@@ -144,14 +152,12 @@ Once deployment completes:
 
 2. **Access the Frontend**:
    Visit `https://<your-service-name>.onrender.com/`
-   - Click **Quick Explore: Instant Demo Access** OR sign in with:
-     - **Email**: `alex.morgan@team-sync.space`
-     - **Password**: `password123`
+   - Create an account or sign in with a registered user. Workspace pages and feature APIs require a valid authenticated session.
 
 3. **Verify Projects & Task Allocation**:
    - Navigate to **Projects & Tasks** in the sidebar.
    - Check the **Interactive Kanban Board** (`To Do`, `In Progress`, `Under Review`, `Completed`).
-   - Click **"My Tasks Only"** to filter tasks allocated specifically to Alex Morgan.
+   - Click **"My Tasks Only"** to filter tasks allocated to your account.
    - Click **"Start Work"** or change task status to verify real-time status transitions.
    - Click **"+ Allocate Task"** to assign a new deliverable to any team member.
    - Click **"+ New Project"** to launch a new departmental project.

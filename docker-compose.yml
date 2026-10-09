@@ -14,7 +14,7 @@ services:
       - MONGO_URI=mongodb://mongo:27017/team-sync
       - JWT_SECRET=teamsync_production_secret_key_docker_2026
       - JWT_EXPIRES_IN=7d
-      - AUTO_SEED=true
+      - AUTO_SEED=false
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}
     depends_on:
       mongo:

@@ -14,37 +14,20 @@ interface AuthState {
   isAuthenticated: boolean;
 }
 
-const getStoredUser = (): AuthUser | null => {
-  try {
-    const raw = localStorage.getItem('team_sync_user');
-    return raw ? (JSON.parse(raw) as AuthUser) : null;
-  } catch {
-    return null;
-  }
-};
-
-const savedUser = getStoredUser();
-
 const initialState: AuthState = {
-  employee: savedUser,
-  isLoading: false,
+  employee: null,
+  isLoading: true,
   error: null,
-  isAuthenticated: !!savedUser,
+  isAuthenticated: false,
 };
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    addEmployee: (state, action: PayloadAction<AuthUser>) => {
-      state.employee = action.payload;
-      state.isLoading = false;
-      state.isAuthenticated = true;
-      state.error = null;
-      try {
-        localStorage.setItem('team_sync_user', JSON.stringify(action.payload));
-      } catch {
-        // Ignore storage errors
+    updateEmployee: (state, action: PayloadAction<Partial<AuthUser>>) => {
+      if (state.employee) {
+        Object.assign(state.employee, action.payload);
       }
     },
     removeEmployee: (state) => {
@@ -52,11 +35,6 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.isAuthenticated = false;
       state.error = null;
-      try {
-        localStorage.removeItem('team_sync_user');
-      } catch {
-        // Ignore storage errors
-      }
     },
     clearError: (state) => {
       state.error = null;
@@ -74,11 +52,6 @@ const authSlice = createSlice({
         state.employee = action.payload;
         state.isAuthenticated = true;
         state.error = null;
-        try {
-          localStorage.setItem('team_sync_user', JSON.stringify(action.payload));
-        } catch {
-          // Ignore
-        }
       })
       .addCase(loginEmployee.rejected, (state, action) => {
         state.isLoading = false;
@@ -96,11 +69,6 @@ const authSlice = createSlice({
         state.employee = action.payload;
         state.isAuthenticated = true;
         state.error = null;
-        try {
-          localStorage.setItem('team_sync_user', JSON.stringify(action.payload));
-        } catch {
-          // Ignore
-        }
       })
       .addCase(registerEmployee.rejected, (state, action) => {
         state.isLoading = false;
@@ -110,30 +78,22 @@ const authSlice = createSlice({
 
       // Session check (auth/me) - does NOT populate form error on rejection
       .addCase(currentLoggedEmployee.pending, (state) => {
-        // Only show loading if we don't already have a persisted session
-        if (!state.employee) {
-          state.isLoading = true;
-        }
+        state.isLoading = true;
       })
       .addCase(currentLoggedEmployee.fulfilled, (state, action) => {
         state.isLoading = false;
         if (action.payload) {
           state.employee = action.payload;
           state.isAuthenticated = true;
-          try {
-            localStorage.setItem('team_sync_user', JSON.stringify(action.payload));
-          } catch {
-            // Ignore
-          }
+        } else {
+          state.employee = null;
+          state.isAuthenticated = false;
         }
       })
       .addCase(currentLoggedEmployee.rejected, (state) => {
         state.isLoading = false;
-        // Do not overwrite user session if offline and had local storage
-        if (!savedUser) {
-          state.employee = null;
-          state.isAuthenticated = false;
-        }
+        state.employee = null;
+        state.isAuthenticated = false;
         // Note: deliberately NOT setting state.error here to prevent false error banners on login page
       })
 
@@ -143,25 +103,15 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.isLoading = false;
         state.error = null;
-        try {
-          localStorage.removeItem('team_sync_user');
-        } catch {
-          // Ignore
-        }
       })
       .addCase(logoutEmployee.rejected, (state) => {
         state.employee = null;
         state.isAuthenticated = false;
         state.isLoading = false;
         state.error = null;
-        try {
-          localStorage.removeItem('team_sync_user');
-        } catch {
-          // Ignore
-        }
       });
   },
 });
 
-export const { addEmployee, removeEmployee, clearError } = authSlice.actions;
+export const { updateEmployee, removeEmployee, clearError } = authSlice.actions;
 export default authSlice.reducer;

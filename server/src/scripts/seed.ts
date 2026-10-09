@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import { randomBytes } from 'crypto';
 import path from 'path';
 import mongoose from 'mongoose';
 import { User } from '../models/User';
@@ -80,7 +81,7 @@ export const seedInitialData = async (forceClean: boolean = true): Promise<void>
       {
         name: 'Alex Morgan',
         email: 'alex.morgan@team-sync.space',
-        password: 'password123',
+        password: randomBytes(32).toString('hex'),
         role: 'Lead Systems Architect',
         department: 'Engineering',
         status: 'active',
@@ -91,7 +92,7 @@ export const seedInitialData = async (forceClean: boolean = true): Promise<void>
       {
         name: 'Elena Rostova',
         email: 'elena.r@team-sync.space',
-        password: 'password123',
+        password: randomBytes(32).toString('hex'),
         role: 'Staff ML Engineer',
         department: 'AI Research',
         status: 'remote',
@@ -102,7 +103,7 @@ export const seedInitialData = async (forceClean: boolean = true): Promise<void>
       {
         name: 'Marcus Chen',
         email: 'marcus.c@team-sync.space',
-        password: 'password123',
+        password: randomBytes(32).toString('hex'),
         role: 'Principal UX Designer',
         department: 'Product & Design',
         status: 'active',
@@ -113,7 +114,7 @@ export const seedInitialData = async (forceClean: boolean = true): Promise<void>
       {
         name: 'Priya Sharma',
         email: 'priya.s@team-sync.space',
-        password: 'password123',
+        password: randomBytes(32).toString('hex'),
         role: 'Engineering Manager',
         department: 'Engineering',
         status: 'active',
@@ -124,7 +125,7 @@ export const seedInitialData = async (forceClean: boolean = true): Promise<void>
       {
         name: 'David Kim',
         email: 'david.k@team-sync.space',
-        password: 'password123',
+        password: randomBytes(32).toString('hex'),
         role: 'Senior DevOps Specialist',
         department: 'Operations',
         status: 'remote',
@@ -135,7 +136,7 @@ export const seedInitialData = async (forceClean: boolean = true): Promise<void>
       {
         name: 'Sophia Alvarez',
         email: 'sophia.a@team-sync.space',
-        password: 'password123',
+        password: randomBytes(32).toString('hex'),
         role: 'Growth Marketing Director',
         department: 'Marketing & Growth',
         status: 'on_leave',
@@ -403,7 +404,7 @@ export const seedInitialData = async (forceClean: boolean = true): Promise<void>
 
     console.log(`[Seed] Successfully seeded:
 - ${departments.length} departments
-- ${users.length} users/employees (Demo: alex.morgan@team-sync.space / password123)
+- ${users.length} seeded employee records (sign-in accounts must be registered separately)
 - ${projects.length} strategic projects
 - ${tasks.length} allocated employee tasks
 - 4 initial activities`);

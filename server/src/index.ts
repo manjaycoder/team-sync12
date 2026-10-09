@@ -128,7 +128,7 @@ const startServer = async () => {
       const deptCount = await Department.countDocuments();
       const userCount = await User.countDocuments();
       if (deptCount === 0 || userCount === 0) {
-        console.log('[Auto-Seed] Empty database detected. Populating demo departments, users, projects, and tasks...');
+        console.log('[Auto-Seed] Empty database detected. Populating initial workspace records...');
         await seedInitialData(false);
       }
     } catch (err: any) {

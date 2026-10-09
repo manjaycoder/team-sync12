@@ -7,13 +7,13 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "dev": "vite",
+    "dev123": "vite",
     "dev:server": "npm --prefix server run dev",
     "build:client": "tsc -b && vite build",
     "build:server": "npm --prefix server run build",
     "build": "npm run build:client && npm run build:server",
     "render-build": "npm install && npm run build:client && npm --prefix server install && npm run build:server",
-    "start": "node server/dist/index.js",
+    "dev": "node server/dist/index.js",
     "seed": "npm --prefix server run seed",
     "lint": "eslint .",
     "preview": "vite preview"

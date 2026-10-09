@@ -11,7 +11,7 @@ services:
     buildCommand: npm run render-build
     startCommand: npm start
     healthCheckPath: /api/health
-    autoDeploy: true
+    autoDeploy: false
     envVars:
       - key: NODE_ENV
         value: production
@@ -26,4 +26,4 @@ services:
       - key: GEMINI_API_KEY
         sync: false
       - key: AUTO_SEED
-        value: "true"
+        value: "false"

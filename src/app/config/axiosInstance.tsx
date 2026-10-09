@@ -16,6 +16,13 @@ export const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
+    if (
+      error.response?.status === 401 &&
+      !error.config?.url?.includes('/auth/')
+    ) {
+      window.dispatchEvent(new Event('team-sync:unauthorized'));
+    }
+
     // Graceful fallback logging for network or CORS failures
     if (error.code === 'ERR_NETWORK' || !error.response) {
       console.warn('Network / Server connection issue:', error.message);

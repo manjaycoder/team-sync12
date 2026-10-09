@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 export const connectDB = async (retries = 5, delayMs = 3000): Promise<void> => {
-  const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/team-sync';
+  const mongoUri = 'mongodb://127.0.0.1:27017/team-sync';
 
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {

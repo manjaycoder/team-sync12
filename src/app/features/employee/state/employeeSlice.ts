@@ -21,82 +21,8 @@ interface EmployeeState {
   isLoading: boolean;
 }
 
-const INITIAL_EMPLOYEES: EmployeeRecord[] = [
-  {
-    id: 'emp-1',
-    name: 'Alex Morgan',
-    email: 'alex.morgan@team-sync.space',
-    role: 'Lead Systems Architect',
-    department: 'Engineering',
-    status: 'active',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-    joinedDate: 'Jan 2023',
-    location: 'San Francisco, CA',
-  },
-  {
-    id: 'emp-2',
-    name: 'Elena Rostova',
-    email: 'elena.r@team-sync.space',
-    role: 'Staff ML Engineer',
-    department: 'AI Research',
-    status: 'remote',
-    avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
-    joinedDate: 'Mar 2023',
-    location: 'Berlin, DE',
-  },
-  {
-    id: 'emp-3',
-    name: 'Marcus Chen',
-    email: 'marcus.c@team-sync.space',
-    role: 'Principal UX Designer',
-    department: 'Product & Design',
-    status: 'active',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-    joinedDate: 'Jun 2023',
-    location: 'Seattle, WA',
-  },
-  {
-    id: 'emp-4',
-    name: 'Priya Sharma',
-    email: 'priya.s@team-sync.space',
-    role: 'Engineering Manager',
-    department: 'Engineering',
-    status: 'active',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
-    joinedDate: 'Sep 2023',
-    location: 'Bangalore, IN',
-  },
-  {
-    id: 'emp-5',
-    name: 'David Kim',
-    email: 'david.k@team-sync.space',
-    role: 'Senior DevOps Specialist',
-    department: 'Operations',
-    status: 'remote',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
-    joinedDate: 'Nov 2023',
-    location: 'Toronto, CA',
-  },
-  {
-    id: 'emp-6',
-    name: 'Sophia Alvarez',
-    email: 'sophia.a@team-sync.space',
-    role: 'Growth Marketing Director',
-    department: 'Marketing & Growth',
-    status: 'on_leave',
-    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
-    joinedDate: 'Feb 2024',
-    location: 'Austin, TX',
-  },
-];
-
 const loadInitial = (): EmployeeRecord[] => {
-  try {
-    const raw = localStorage.getItem('team_sync_employees');
-    return raw ? JSON.parse(raw) : INITIAL_EMPLOYEES;
-  } catch {
-    return INITIAL_EMPLOYEES;
-  }
+  return [];
 };
 
 export const fetchEmployees = createAsyncThunk('employee/fetchAll', async () => {
@@ -183,7 +109,7 @@ const employeeSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchEmployees.fulfilled, (state, action) => {
-        if (action.payload && action.payload.length > 0) {
+        if (action.payload) {
           state.employees = action.payload;
           try {
             localStorage.setItem('team_sync_employees', JSON.stringify(action.payload));

@@ -3,6 +3,15 @@ import jwt from 'jsonwebtoken';
 import { User, IUser } from '../models/User';
 import { AuthRequest } from '../middleware/authMiddleware';
 
+const SEEDED_WORKSPACE_EMAILS = new Set([
+  'alex.morgan@team-sync.space',
+  'elena.r@team-sync.space',
+  'marcus.c@team-sync.space',
+  'priya.s@team-sync.space',
+  'david.k@team-sync.space',
+  'sophia.a@team-sync.space',
+]);
+
 const generateToken = (id: string): string => {
   const secret = process.env.JWT_SECRET || 'teamsync_jwt_super_secret_key_2026_production_ready';
   const expiresIn = process.env.JWT_EXPIRES_IN || '7d';
@@ -87,6 +96,11 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
 
     if (!user) {
+      res.status(401).json({ message: 'Invalid email or password' });
+      return;
+    }
+
+    if (SEEDED_WORKSPACE_EMAILS.has(user.email)) {
       res.status(401).json({ message: 'Invalid email or password' });
       return;
     }

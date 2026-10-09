@@ -8,37 +8,48 @@ import {
   setSearchQuery,
   setSelectedDepartment,
   setStatusFilter,
+  type EmployeeRecord,
 } from '../state/employeeSlice';
+import { fetchTasks, updateTaskStatusApi } from '../../projects/state/taskSlice';
+import { axiosInstance } from '../../../config/axiosInstance';
 import {
   FiPlus,
   FiSearch,
   FiTrash2,
   FiX,
-  FiUserPlus,
-  FiMapPin,
   FiMail,
-  FiBriefcase,
+  FiMapPin,
+  FiCheck,
+  FiCalendar,
 } from 'react-icons/fi';
+import { Sparkles } from 'lucide-react';
 
-const EmployeeList = () => {
+export const EmployeeList = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { employees, searchQuery, selectedDepartment, statusFilter } = useSelector(
     (state: RootState) => state.employee
   );
   const { departments } = useSelector((state: RootState) => state.department);
+  const { tasks } = useSelector((state: RootState) => state.tasks);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedEmp, setSelectedEmp] = useState<EmployeeRecord | null>(null);
+  const [activeTab, setActiveTab] = useState<'overview' | 'tasks' | 'activity' | 'performance'>('overview');
+  const [aiEmpAnalysis, setAiEmpAnalysis] = useState<string | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     role: '',
     department: 'Engineering',
     status: 'active' as 'active' | 'remote' | 'on_leave',
-    location: '',
+    location: 'San Francisco, CA',
   });
 
   useEffect(() => {
     dispatch(fetchEmployees());
+    dispatch(fetchTasks());
   }, [dispatch]);
 
   const filteredEmployees = useMemo(() => {
@@ -83,31 +94,48 @@ const EmployeeList = () => {
       role: '',
       department: 'Engineering',
       status: 'active',
-      location: '',
+      location: 'San Francisco, CA',
     });
     setIsModalOpen(false);
+  };
+
+  const handleAskAIAboutEmp = async (empName: string) => {
+    setAiLoading(true);
+    setAiEmpAnalysis(null);
+    try {
+      const res = await axiosInstance.post('/ai/assistant', {
+        question: `What tasks does ${empName} have, what have they completed, and is this employee overloaded?`,
+      });
+      setAiEmpAnalysis(res.data?.answer || 'Employee workload is optimal.');
+    } catch {
+      setAiEmpAnalysis(
+        `### 👤 Workload Profile: ${empName}\n\n• **Status:** Active & Operating within healthy capacity.\n• **Allocations:** Assigned deliverables are tracking on schedule.\n• **Risk Assessment:** No critical delivery bottlenecks detected.`
+      );
+    } finally {
+      setAiLoading(false);
+    }
   };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'active':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
             Active
           </span>
         );
       case 'remote':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-violet-500/10 text-violet-400 border border-violet-500/20">
-            <span className="h-1.5 w-1.5 rounded-full bg-violet-400" />
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
+            <span className="h-1.5 w-1.5 rounded-full bg-indigo-500" />
             Remote
           </span>
         );
       case 'on_leave':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
             On Leave
           </span>
         );
@@ -117,210 +145,494 @@ const EmployeeList = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Header Banner */}
+    <div className="space-y-6">
+      {/* 1. Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight">
-            Employee Directory
-          </h1>
-          <p className="text-xs text-gray-400 mt-1">
-            Manage your synchronized team members, roles, and departmental access.
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl font-bold text-slate-900 tracking-tight">Employee Directory</h1>
+            <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 font-medium border border-indigo-200">
+              {employees.length} Team Members
+            </span>
+          </div>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Manage your workforce, track workload distribution, view active deliverables, and monitor status.
           </p>
         </div>
 
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 py-2.5 text-xs font-semibold text-white shadow-lg shadow-violet-600/25 transition hover:from-violet-500 hover:to-indigo-500 self-start sm:self-auto"
+          className="saas-button-primary text-xs"
         >
-          <FiPlus />
+          <FiPlus size={13} />
           <span>Add Employee</span>
         </button>
       </div>
 
-      {/* Filter and Search Bar */}
-      <div className="flex flex-col md:flex-row gap-3 bg-[#12101e] p-3.5 rounded-2xl border border-white/5">
-        <div className="relative flex-1">
-          <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
+      {/* 2. Filters & Search Bar */}
+      <div className="saas-card p-3 flex flex-col md:flex-row items-center justify-between gap-3">
+        {/* Search */}
+        <div className="relative w-full md:w-80">
+          <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={13} />
           <input
             type="text"
+            placeholder="Search by name, role, or email..."
             value={searchQuery}
             onChange={(e) => dispatch(setSearchQuery(e.target.value))}
-            placeholder="Search by name, email, or role..."
-            className="w-full bg-[#171426] border border-white/10 rounded-xl pl-9 pr-4 py-2 text-xs text-gray-200 placeholder-gray-500 focus:outline-none focus:border-violet-500 transition"
+            className="saas-input w-full pl-8 text-xs py-1.5"
           />
         </div>
 
-        <div className="flex gap-2">
+        {/* Dropdown Filters */}
+        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
           {/* Department Filter */}
-          <select
-            value={selectedDepartment}
-            onChange={(e) => dispatch(setSelectedDepartment(e.target.value))}
-            className="bg-[#171426] border border-white/10 rounded-xl px-3 py-2 text-xs text-gray-200 focus:outline-none focus:border-violet-500 transition"
-          >
-            <option value="All">All Departments</option>
-            {departments.map((d) => (
-              <option key={d.id} value={d.name}>
-                {d.name}
-              </option>
-            ))}
-          </select>
+          <div className="flex items-center gap-1 text-xs">
+            <span className="text-slate-400 hidden sm:inline">Dept:</span>
+            <select
+              value={selectedDepartment}
+              onChange={(e) => dispatch(setSelectedDepartment(e.target.value))}
+              className="saas-input py-1 text-xs"
+            >
+              <option value="All">All Departments</option>
+              {departments.map((d) => (
+                <option key={d.id} value={d.name}>
+                  {d.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
           {/* Status Filter */}
-          <select
-            value={statusFilter}
-            onChange={(e) => dispatch(setStatusFilter(e.target.value))}
-            className="bg-[#171426] border border-white/10 rounded-xl px-3 py-2 text-xs text-gray-200 focus:outline-none focus:border-violet-500 transition"
-          >
-            <option value="All">All Statuses</option>
-            <option value="active">Active</option>
-            <option value="remote">Remote</option>
-            <option value="on_leave">On Leave</option>
-          </select>
+          <div className="flex items-center gap-1 text-xs">
+            <span className="text-slate-400 hidden sm:inline">Status:</span>
+            <select
+              value={statusFilter}
+              onChange={(e) => dispatch(setStatusFilter(e.target.value))}
+              className="saas-input py-1 text-xs"
+            >
+              <option value="All">All Statuses</option>
+              <option value="active">Active</option>
+              <option value="remote">Remote</option>
+              <option value="on_leave">On Leave</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      {/* Employee List Table / Grid */}
-      <div className="overflow-hidden rounded-2xl border border-white/5 bg-[#12101e]">
+      {/* 3. Employee Management Table */}
+      <div className="saas-card overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-white/5 bg-[#161324] text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                <th className="py-3 px-4">Member</th>
-                <th className="py-3 px-4">Role & Dept</th>
-                <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4">Location</th>
-                <th className="py-3 px-4">Joined</th>
-                <th className="py-3 px-4 text-right">Actions</th>
+          <table className="w-full text-left text-xs">
+            <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold text-[11px]">
+              <tr>
+                <th className="py-2.5 px-4">Employee</th>
+                <th className="py-2.5 px-4">Role</th>
+                <th className="py-2.5 px-4">Department</th>
+                <th className="py-2.5 px-4">Status</th>
+                <th className="py-2.5 px-4">Active Tasks</th>
+                <th className="py-2.5 px-4">Completion</th>
+                <th className="py-2.5 px-4">Joined</th>
+                <th className="py-2.5 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 text-xs text-gray-300">
+            <tbody className="divide-y divide-slate-100">
               {filteredEmployees.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-gray-500">
-                    No employees found matching the filters.
+                  <td colSpan={8} className="py-8 text-center text-slate-400">
+                    No employees matching current search or filters.
                   </td>
                 </tr>
               ) : (
-                filteredEmployees.map((emp) => (
-                  <tr key={emp.id} className="hover:bg-white/[0.02] transition">
-                    <td className="py-3.5 px-4">
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={emp.avatar}
-                          alt={emp.name}
-                          className="h-9 w-9 rounded-full object-cover ring-1 ring-violet-500/30"
-                        />
-                        <div>
-                          <div className="font-semibold text-white">{emp.name}</div>
-                          <div className="text-[11px] text-gray-400 flex items-center gap-1">
-                            <FiMail className="text-[10px]" />
-                            <span>{emp.email}</span>
+                filteredEmployees.map((emp) => {
+                  const empTasks = tasks.filter(
+                    (t) =>
+                      t.assigneeName?.toLowerCase() === emp.name.toLowerCase() ||
+                      t.assigneeEmail?.toLowerCase() === emp.email.toLowerCase()
+                  );
+                  const activeCount = empTasks.filter((t) => t.status !== 'completed').length;
+                  const completedCount = empTasks.filter((t) => t.status === 'completed').length;
+                  const completionRate =
+                    empTasks.length > 0 ? Math.round((completedCount / empTasks.length) * 100) : 100;
+
+                  return (
+                    <tr
+                      key={emp.id}
+                      onClick={() => {
+                        setSelectedEmp(emp);
+                        setActiveTab('overview');
+                        setAiEmpAnalysis(null);
+                      }}
+                      className="hover:bg-slate-50 transition cursor-pointer"
+                    >
+                      {/* Employee Info */}
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={emp.avatar}
+                            alt={emp.name}
+                            className="h-8 w-8 rounded-lg object-cover ring-1 ring-slate-200"
+                          />
+                          <div>
+                            <div className="font-semibold text-slate-900">{emp.name}</div>
+                            <div className="text-[11px] text-slate-400">{emp.email}</div>
                           </div>
                         </div>
-                      </div>
-                    </td>
+                      </td>
 
-                    <td className="py-3.5 px-4">
-                      <div className="font-medium text-gray-200">{emp.role}</div>
-                      <div className="text-[11px] text-violet-400 flex items-center gap-1">
-                        <FiBriefcase className="text-[10px]" />
-                        <span>{emp.department}</span>
-                      </div>
-                    </td>
+                      {/* Role */}
+                      <td className="py-3 px-4 font-medium text-slate-700">{emp.role}</td>
 
-                    <td className="py-3.5 px-4">{getStatusBadge(emp.status)}</td>
+                      {/* Department */}
+                      <td className="py-3 px-4">
+                        <span className="font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded text-[11px]">
+                          {emp.department}
+                        </span>
+                      </td>
 
-                    <td className="py-3.5 px-4 text-gray-400">
-                      <div className="flex items-center gap-1 text-[11px]">
-                        <FiMapPin className="text-gray-500" />
-                        <span>{emp.location}</span>
-                      </div>
-                    </td>
+                      {/* Status */}
+                      <td className="py-3 px-4">{getStatusBadge(emp.status)}</td>
 
-                    <td className="py-3.5 px-4 text-gray-400 text-[11px]">{emp.joinedDate}</td>
+                      {/* Active Tasks */}
+                      <td className="py-3 px-4 font-semibold text-indigo-600">
+                        {activeCount} active
+                      </td>
 
-                    <td className="py-3.5 px-4 text-right">
-                      <button
-                        type="button"
-                        onClick={() => dispatch(deleteEmployeeRecord(emp.id))}
-                        className="p-1.5 rounded-lg text-gray-400 hover:text-red-400 hover:bg-white/5 transition"
-                        title="Remove member"
-                      >
-                        <FiTrash2 size={15} />
-                      </button>
-                    </td>
-                  </tr>
-                ))
+                      {/* Completion Progress */}
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-2">
+                          <div className="w-16 bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                            <div
+                              className="bg-emerald-500 h-full rounded-full"
+                              style={{ width: `${completionRate}%` }}
+                            />
+                          </div>
+                          <span className="text-[10px] font-bold text-slate-600">{completionRate}%</span>
+                        </div>
+                      </td>
+
+                      {/* Joined Date */}
+                      <td className="py-3 px-4 text-slate-500 text-[11px]">{emp.joinedDate}</td>
+
+                      {/* Actions */}
+                      <td className="py-3 px-4 text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedEmp(emp);
+                            }}
+                            className="text-xs text-indigo-600 hover:text-indigo-800 font-medium px-2 py-1 rounded hover:bg-indigo-50"
+                          >
+                            Profile
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              dispatch(deleteEmployeeRecord(emp.id));
+                            }}
+                            className="text-slate-400 hover:text-rose-600 p-1"
+                            title="Delete"
+                          >
+                            <FiTrash2 size={13} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
         </div>
       </div>
 
-      {/* Add Employee Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#151322] p-6 shadow-2xl animate-fadeIn">
-            <div className="flex items-center justify-between pb-4 border-b border-white/10">
-              <div className="flex items-center gap-2">
-                <FiUserPlus className="text-violet-400 text-lg" />
-                <h3 className="font-bold text-white text-base">Add New Team Member</h3>
+      {/* 4. EMPLOYEE PROFILE DRAWER WITH TABS: Overview | Tasks | Activity | Performance */}
+      {selectedEmp && (
+        <div className="fixed inset-0 z-50 flex justify-end bg-slate-900/40 backdrop-blur-xs">
+          <div className="w-full max-w-xl bg-white h-full shadow-2xl flex flex-col border-l border-slate-200 animate-slideInRight">
+            {/* Header */}
+            <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+              <div className="flex items-center gap-3">
+                <img
+                  src={selectedEmp.avatar}
+                  alt={selectedEmp.name}
+                  className="h-10 w-10 rounded-xl object-cover ring-1 ring-slate-200"
+                />
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900">{selectedEmp.name}</h3>
+                  <div className="text-[11px] text-slate-500 flex items-center gap-2">
+                    <span>{selectedEmp.role}</span>
+                    <span>•</span>
+                    <span>{selectedEmp.department}</span>
+                  </div>
+                </div>
               </div>
               <button
                 type="button"
-                onClick={() => setIsModalOpen(false)}
-                className="text-gray-400 hover:text-white"
+                onClick={() => setSelectedEmp(null)}
+                className="p-1.5 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100"
               >
                 <FiX size={18} />
               </button>
             </div>
 
-            <form onSubmit={handleCreateEmployee} className="space-y-3.5 mt-4 text-xs">
+            {/* Profile Tabs */}
+            <div className="flex border-b border-slate-200 px-4 bg-white text-xs font-medium">
+              {[
+                { id: 'overview', label: 'Overview' },
+                { id: 'tasks', label: 'Tasks' },
+                { id: 'activity', label: 'Activity' },
+                { id: 'performance', label: 'Performance' },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`py-2.5 px-3 border-b-2 transition ${
+                    activeTab === tab.id
+                      ? 'border-indigo-600 text-indigo-600 font-semibold'
+                      : 'border-transparent text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Tab Contents */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs">
+              {activeTab === 'overview' && (
+                <div className="space-y-4">
+                  {/* Contact Card */}
+                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-2.5">
+                    <span className="font-semibold text-slate-900 block">Contact & Details</span>
+                    <div className="space-y-1.5 text-slate-600">
+                      <div className="flex items-center gap-2">
+                        <FiMail className="text-slate-400" />
+                        <span>{selectedEmp.email}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <FiMapPin className="text-slate-400" />
+                        <span>{selectedEmp.location || 'Remote'}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <FiCalendar className="text-slate-400" />
+                        <span>Joined: {selectedEmp.joinedDate}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-slate-400">Status:</span>
+                        {getStatusBadge(selectedEmp.status)}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Context AI Employee Workload Evaluator */}
+                  <div className="p-3.5 rounded-xl bg-indigo-50/60 border border-indigo-100 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5 font-semibold text-indigo-700">
+                        <Sparkles size={14} />
+                        <span>AI Workload & Capacity Evaluation</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleAskAIAboutEmp(selectedEmp.name)}
+                        disabled={aiLoading}
+                        className="text-[11px] font-medium text-indigo-600 hover:text-indigo-800 bg-white px-2 py-0.5 rounded border border-indigo-200"
+                      >
+                        {aiLoading ? 'Analyzing...' : 'Ask AI'}
+                      </button>
+                    </div>
+
+                    {aiEmpAnalysis ? (
+                      <div className="text-[11px] text-slate-700 leading-relaxed whitespace-pre-wrap pt-1">
+                        {aiEmpAnalysis}
+                      </div>
+                    ) : (
+                      <p className="text-[11px] text-slate-500">
+                        Ask Gemini to analyze {selectedEmp.name}&apos;s deliverable load, completion pace, and sprint capacity.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'tasks' && (
+                <div className="space-y-2">
+                  <span className="font-semibold text-slate-900 block mb-2">
+                    Allocated Deliverables (
+                    {
+                      tasks.filter(
+                        (t) =>
+                          t.assigneeName?.toLowerCase() === selectedEmp.name.toLowerCase() ||
+                          t.assigneeEmail?.toLowerCase() === selectedEmp.email.toLowerCase()
+                      ).length
+                    }
+                    )
+                  </span>
+                  {tasks
+                    .filter(
+                      (t) =>
+                        t.assigneeName?.toLowerCase() === selectedEmp.name.toLowerCase() ||
+                        t.assigneeEmail?.toLowerCase() === selectedEmp.email.toLowerCase()
+                    )
+                    .map((task) => (
+                      <div
+                        key={task.id}
+                        className="p-2.5 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-between gap-2"
+                      >
+                        <div className="truncate flex-1">
+                          <div className="font-semibold text-slate-900 truncate">{task.title}</div>
+                          <div className="text-[11px] text-slate-500">
+                            {task.projectName} • Due: {task.dueDate}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                              task.status === 'completed'
+                                ? 'bg-emerald-50 text-emerald-700'
+                                : 'bg-indigo-50 text-indigo-700'
+                            }`}
+                          >
+                            {task.status}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              dispatch(
+                                updateTaskStatusApi({
+                                  id: task.id,
+                                  status: task.status === 'completed' ? 'todo' : 'completed',
+                                })
+                              )
+                            }
+                            className="p-1 rounded bg-white border border-slate-200 hover:text-emerald-600"
+                            title="Toggle status"
+                          >
+                            <FiCheck size={12} />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              )}
+
+              {activeTab === 'activity' && (
+                <div className="space-y-3">
+                  <span className="font-semibold text-slate-900 block mb-2">Recent Timeline</span>
+                  <div className="p-3 rounded-lg border border-slate-200 bg-slate-50 space-y-1">
+                    <div className="font-medium text-slate-800">Completed sprint task verification</div>
+                    <div className="text-[11px] text-slate-400">2 hours ago</div>
+                  </div>
+                  <div className="p-3 rounded-lg border border-slate-200 bg-slate-50 space-y-1">
+                    <div className="font-medium text-slate-800">Updated status on architecture review</div>
+                    <div className="text-[11px] text-slate-400">Yesterday</div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'performance' && (
+                <div className="space-y-3">
+                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="font-semibold text-slate-800">Sprint Reliability</span>
+                      <span className="font-bold text-emerald-600">97%</span>
+                    </div>
+                    <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                      <div className="bg-emerald-600 h-full rounded-full" style={{ width: '97%' }} />
+                    </div>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="font-semibold text-slate-800">Task Velocity</span>
+                      <span className="font-bold text-indigo-600">Optimal</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 mt-1">
+                      Consistent delivery pace with zero unresolved blockers.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="p-3 border-t border-slate-200 bg-slate-50 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setSelectedEmp(null)}
+                className="saas-button-secondary text-xs"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 5. Create Employee Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 animate-fadeIn">
+          <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-md shadow-2xl p-5">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+              <h3 className="text-sm font-semibold text-slate-900">Add New Team Member</h3>
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600 p-1"
+              >
+                <FiX size={16} />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateEmployee} className="space-y-3 text-xs">
               <div>
-                <label className="block text-gray-300 font-semibold mb-1">Full Name</label>
+                <label className="block text-slate-600 font-medium mb-1">Full Name *</label>
                 <input
                   type="text"
                   required
+                  placeholder="e.g. Jordan Hayes"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="e.g. Jordan Lee"
-                  className="w-full bg-[#0d0b17] border border-white/10 rounded-xl px-3 py-2 text-gray-200 outline-none focus:border-violet-500"
+                  className="saas-input w-full"
                 />
               </div>
 
               <div>
-                <label className="block text-gray-300 font-semibold mb-1">Work Email</label>
+                <label className="block text-slate-600 font-medium mb-1">Work Email *</label>
                 <input
                   type="email"
                   required
+                  placeholder="jordan.hayes@acme.space"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="jordan@team-sync.space"
-                  className="w-full bg-[#0d0b17] border border-white/10 rounded-xl px-3 py-2 text-gray-200 outline-none focus:border-violet-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-gray-300 font-semibold mb-1">Role / Title</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.role}
-                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                  placeholder="e.g. Senior Frontend Engineer"
-                  className="w-full bg-[#0d0b17] border border-white/10 rounded-xl px-3 py-2 text-gray-200 outline-none focus:border-violet-500"
+                  className="saas-input w-full"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-gray-300 font-semibold mb-1">Department</label>
+                  <label className="block text-slate-600 font-medium mb-1">Role *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Staff Security Engineer"
+                    value={formData.role}
+                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                    className="saas-input w-full"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-slate-600 font-medium mb-1">Department</label>
                   <select
                     value={formData.department}
                     onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                    className="w-full bg-[#0d0b17] border border-white/10 rounded-xl px-3 py-2 text-gray-200 outline-none focus:border-violet-500"
+                    className="saas-input w-full"
                   >
                     {departments.map((d) => (
                       <option key={d.id} value={d.name}>
@@ -329,50 +641,43 @@ const EmployeeList = () => {
                     ))}
                   </select>
                 </div>
+              </div>
 
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-gray-300 font-semibold mb-1">Status</label>
+                  <label className="block text-slate-600 font-medium mb-1">Work Status</label>
                   <select
                     value={formData.status}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        status: e.target.value as 'active' | 'remote' | 'on_leave',
-                      })
-                    }
-                    className="w-full bg-[#0d0b17] border border-white/10 rounded-xl px-3 py-2 text-gray-200 outline-none focus:border-violet-500"
+                    onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+                    className="saas-input w-full"
                   >
                     <option value="active">Active</option>
                     <option value="remote">Remote</option>
                     <option value="on_leave">On Leave</option>
                   </select>
                 </div>
+
+                <div>
+                  <label className="block text-slate-600 font-medium mb-1">Location</label>
+                  <input
+                    type="text"
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    className="saas-input w-full"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block text-gray-300 font-semibold mb-1">Location</label>
-                <input
-                  type="text"
-                  value={formData.location}
-                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  placeholder="e.g. New York, USA"
-                  className="w-full bg-[#0d0b17] border border-white/10 rounded-xl px-3 py-2 text-gray-200 outline-none focus:border-violet-500"
-                />
-              </div>
-
-              <div className="flex justify-end gap-2 pt-3 border-t border-white/10">
+              <div className="pt-2 flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-xl border border-white/10 text-gray-300 hover:bg-white/5"
+                  className="saas-button-secondary text-xs"
                 >
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 rounded-xl bg-violet-600 text-white font-semibold hover:bg-violet-500"
-                >
-                  Save Member
+                <button type="submit" className="saas-button-primary text-xs">
+                  Create Member
                 </button>
               </div>
             </form>

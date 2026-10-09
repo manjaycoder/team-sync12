@@ -36,16 +36,6 @@ const extractErrorMessage = (error: unknown, fallback: string): string => {
   return fallback;
 };
 
-// Demo user mock for testing or offline mode
-export const DEMO_USER: AuthUser = {
-  id: 1,
-  name: "Alex Morgan",
-  email: "alex.morgan@team-sync.space",
-  role: "Lead Systems Architect",
-  department: "Engineering",
-  avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-};
-
 export const loginEmployee = createAsyncThunk(
   "auth/login",
   async (credentials: Credentials, thunkApi) => {
@@ -53,13 +43,6 @@ export const loginEmployee = createAsyncThunk(
       const res = await axiosInstance.post("/auth/login", credentials);
       return res.data;
     } catch (error: unknown) {
-      // If user specifically typed demo login credentials or demo mode is triggered
-      if (
-        credentials.email === "alex.morgan@team-sync.space" ||
-        credentials.email === "demo@team-sync.space"
-      ) {
-        return DEMO_USER;
-      }
       return thunkApi.rejectWithValue(
         extractErrorMessage(error, "Login failed. Please check your credentials.")
       );
