@@ -12,8 +12,10 @@ import {
   FiCheck,
   FiCornerDownLeft,
   FiArrowRight,
+  FiActivity,
+  FiCheckCircle,
 } from 'react-icons/fi';
-import { Sparkles, CheckCircle2 } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 interface ChatMessage {
   id: string;
@@ -44,17 +46,17 @@ export const AICopilotPage: React.FC = () => {
     projCount: number,
     taskCount: number
   ) => {
-    return `### 👋 Welcome to your Google Gemini AI Workplace Workspace
+    return `### 👋 Google Gemini Neural Copilot Synchronized
 
-I have real-time access to our entire organizational knowledge graph with **${empCount} employees**, **${deptCount} departments**, **${projCount} projects**, and **${taskCount} tasks**.
+Connected to live organizational graph containing **${empCount} team members**, **${deptCount} divisions**, **${projCount} active tracks**, and **${taskCount} deliverables**.
 
-**Ask anything about your organization, teams, and work:**
-• *"Which tasks are overdue?"*
-• *"Who has the highest workload?"*
-• *"Show Engineering tasks due this week."*
-• *"Summarize this department."*
+**Recommended Inquiries:**
+• *"Which tasks are currently overdue or at risk?"*
+• *"Who has the highest workload allocation across the team?"*
+• *"Show all Engineering division deliverables due this week."*
+• *"Summarize the current velocity score of the Design Systems division."*
 • *"What tasks are assigned to Alex Morgan?"*
-• *"Which employees completed the most tasks?"*`;
+• *"Generate an executive status report on active deliverables."*`;
   };
 
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([
@@ -67,7 +69,7 @@ I have real-time access to our entire organizational knowledge graph with **${em
         projects.length || 7,
         tasks.length || 16
       ),
-      time: 'Just now',
+      time: 'Synchronized',
     },
   ]);
 
@@ -129,7 +131,7 @@ I have real-time access to our entire organizational knowledge graph with **${em
         {
           id: `gemini-${Date.now()}`,
           sender: 'gemini',
-          text: `### 🤖 Organizational Intelligence Snapshot\n\n• **Active Departments:** ${departments.length}\n• **Total Staff:** ${employees.length}\n• **Active Tasks:** ${tasks.length}\n• **Velocity Score:** 96% optimal across all core teams.\n\n*All organizational nodes are operating with zero architectural delivery blockers.*`,
+          text: `### 🤖 Organizational Intelligence Telemetry\n\n• **Active Divisions:** ${departments.length}\n• **Total Staff:** ${employees.length}\n• **Total Tasks In Flight:** ${tasks.length}\n• **Velocity Score:** 98.4% optimal across all core teams.\n\n*All neural organizational nodes are synchronized with zero architectural delivery blockers.*`,
           time: fallbackTime,
         },
       ]);
@@ -148,12 +150,12 @@ I have real-time access to our entire organizational knowledge graph with **${em
         department: selectedDept,
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         agenda: [
-          'Review sprint commitments & delivery blockers',
-          'Coordinate cross-department deliverables with Engineering',
-          'Confirm QA testing milestones for Friday deployment',
+          'Review sprint commitments & delivery blockers for upcoming release',
+          'Coordinate cross-department deliverables with Engineering lead',
+          'Verify continuous deployment pipeline status and regression suite',
         ],
         keyMetrics: {
-          velocity: '98%',
+          velocity: '98.4%',
           completedTasks: 8,
           activeBlockers: 0,
         },
@@ -175,64 +177,66 @@ I have real-time access to our entire organizational knowledge graph with **${em
     { label: 'Show Engineering tasks due this week', category: 'Tasks' },
     { label: 'Which employees completed the most tasks?', category: 'Staff' },
     { label: 'What tasks are assigned to Alex Morgan?', category: 'Staff' },
-    { label: 'Summarize Engineering department performance', category: 'Strategy' },
+    { label: 'Summarize Engineering division performance', category: 'Strategy' },
   ];
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       {/* 1. Header with Knowledge Graph Status */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold text-slate-900 tracking-tight">AI Workforce Copilot</h1>
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-              <CheckCircle2 size={11} className="text-emerald-500" />
-              Connected to Live Graph
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold text-white tracking-tight font-display">
+              Neural Copilot & Intelligence
+            </h1>
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Live Knowledge Graph
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Ask anything about your organization, sprint deliverables, teams, and workloads.
+          <p className="text-xs text-slate-400 mt-1">
+            Query workspace intelligence, audit sprint deliverables, evaluate workloads, and trigger autonomous briefs.
           </p>
         </div>
 
         {/* Telemetry pill */}
-        <div className="flex items-center gap-2 text-xs text-slate-500 self-start sm:self-auto">
-          <span className="px-2 py-1 rounded bg-white border border-slate-200">
-            {employees.length} Staff
+        <div className="flex items-center gap-2 text-xs font-mono self-start sm:self-auto">
+          <span className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.08] text-slate-300">
+            {employees.length} Personnel
           </span>
-          <span className="px-2 py-1 rounded bg-white border border-slate-200">
-            {departments.length} Depts
+          <span className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.08] text-cyan-400">
+            {departments.length} Divisions
           </span>
-          <span className="px-2 py-1 rounded bg-white border border-slate-200">
+          <span className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.08] text-indigo-400">
             {tasks.length} Deliverables
           </span>
         </div>
       </div>
 
-      {/* 2. Standup Generator Utility Banner */}
-      <div className="saas-card p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-indigo-50 text-indigo-700 shrink-0">
-            <Sparkles size={16} />
+      {/* 2. Standup Generator Utility Ribbon */}
+      <div className="ts-card p-4 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 shrink-0">
+            <Sparkles size={18} />
           </div>
           <div>
-            <span className="text-xs font-semibold text-slate-900 block">
-              Agile Standup & Briefing Generator
+            <span className="text-sm font-semibold text-white block font-display">
+              Agile Standup & Briefing Synthesizer
             </span>
-            <p className="text-[11px] text-slate-500">
-              Generate daily standup agendas and cross-department synchronization automatically.
+            <p className="text-xs text-slate-400">
+              Autonomous daily agenda generator and cross-division synchronization engine.
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5 self-start md:self-auto">
           <select
             value={selectedDept}
             onChange={(e) => setSelectedDept(e.target.value)}
-            className="saas-input py-1 text-xs"
+            className="ts-input py-1.5 px-3 text-xs font-mono"
           >
             {departments.map((d) => (
-              <option key={d.id} value={d.name}>
+              <option key={d.id} value={d.name} className="bg-[#0b101c] text-white">
                 {d.name}
               </option>
             ))}
@@ -241,59 +245,59 @@ I have real-time access to our entire organizational knowledge graph with **${em
             type="button"
             onClick={handleGenerateStandup}
             disabled={standupLoading}
-            className="saas-button-primary text-xs py-1 px-3 shrink-0"
+            className="ts-btn-primary text-xs py-2 px-4 shrink-0 font-mono"
           >
-            {standupLoading ? 'Generating...' : 'Generate Standup'}
+            {standupLoading ? 'Synthesizing...' : 'Generate Standup'}
           </button>
         </div>
       </div>
 
       {/* Standup Results Card if loaded */}
       {standupData && (
-        <div className="saas-card p-4 bg-indigo-50/50 border-indigo-200 space-y-3 text-xs animate-fadeIn">
-          <div className="flex items-center justify-between pb-2 border-b border-indigo-100">
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-indigo-900">
-                Agile Standup Agenda: {standupData.department || selectedDept}
+        <div className="ts-card p-5 border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 via-indigo-500/5 to-transparent space-y-4 text-xs animate-fadeIn">
+          <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
+            <div className="flex items-center gap-2.5">
+              <span className="font-semibold text-white text-sm font-display">
+                Sprint Standup: {standupData.department || selectedDept}
               </span>
-              <span className="text-[10px] text-indigo-600 bg-white px-1.5 py-0.2 rounded border border-indigo-200">
+              <span className="ts-badge-info text-[10px] font-mono">
                 {standupData.date || 'Today'}
               </span>
             </div>
             <button
               type="button"
               onClick={() => setStandupData(null)}
-              className="text-slate-400 hover:text-slate-600"
+              className="text-slate-400 hover:text-white text-xs font-mono transition"
             >
               Dismiss
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-            <div className="p-2 rounded-lg bg-white border border-indigo-100">
-              <span className="text-[10px] text-slate-400">Velocity</span>
-              <div className="font-bold text-slate-900">{standupData.keyMetrics?.velocity || '98%'}</div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.08]">
+              <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400">Velocity Cadence</span>
+              <div className="font-bold text-white text-base font-mono mt-0.5">{standupData.keyMetrics?.velocity || '98.4%'}</div>
             </div>
-            <div className="p-2 rounded-lg bg-white border border-indigo-100">
-              <span className="text-[10px] text-slate-400">Completed Deliverables</span>
-              <div className="font-bold text-emerald-600">
-                {standupData.keyMetrics?.completedTasks || 8} this sprint
+            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.08]">
+              <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400">Milestone Deliverables</span>
+              <div className="font-bold text-emerald-400 text-base font-mono mt-0.5">
+                {standupData.keyMetrics?.completedTasks || 8} completed
               </div>
             </div>
-            <div className="p-2 rounded-lg bg-white border border-indigo-100">
-              <span className="text-[10px] text-slate-400">Active Blockers</span>
-              <div className="font-bold text-slate-900">
+            <div className="p-3 rounded-xl bg-white/[0.03] border border-white/[0.08]">
+              <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400">Architectural Blockers</span>
+              <div className="font-bold text-cyan-400 text-base font-mono mt-0.5">
                 {standupData.keyMetrics?.activeBlockers || 0} Blockers
               </div>
             </div>
           </div>
 
           {Array.isArray(standupData.agenda) && (
-            <div className="space-y-1">
-              <span className="font-semibold text-slate-900 block">Daily Agenda Points:</span>
+            <div className="space-y-2 pt-1">
+              <span className="font-semibold text-white block font-display">Daily Standup Focus Items:</span>
               {standupData.agenda.map((point: string, idx: number) => (
-                <div key={idx} className="flex items-start gap-1.5 text-slate-700">
-                  <span className="text-indigo-600 font-bold">•</span>
+                <div key={idx} className="flex items-start gap-2 text-slate-300">
+                  <span className="text-cyan-400 font-bold">•</span>
                   <span>{point}</span>
                 </div>
               ))}
@@ -302,13 +306,14 @@ I have real-time access to our entire organizational knowledge graph with **${em
         </div>
       )}
 
-      {/* 3. Main AI Interactive Workspace Card */}
-      <div className="saas-card flex flex-col h-[650px] overflow-hidden">
+      {/* 3. Main AI Interactive Workspace Canvas */}
+      <div className="ts-card flex flex-col h-[680px] overflow-hidden">
         {/* Suggested Prompt Chips */}
-        <div className="px-4 py-2.5 bg-slate-50 border-b border-slate-200 overflow-x-auto">
-          <div className="flex items-center gap-1.5 flex-nowrap">
-            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider shrink-0 mr-1">
-              Quick Inquiries:
+        <div className="px-5 py-3 bg-[#0b101c] border-b border-white/[0.08] overflow-x-auto">
+          <div className="flex items-center gap-2 flex-nowrap">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 shrink-0 mr-1 flex items-center gap-1">
+              <FiActivity size={12} className="text-cyan-400" />
+              Inquiries:
             </span>
             {suggestedQueries.map((q) => (
               <button
@@ -316,56 +321,56 @@ I have real-time access to our entire organizational knowledge graph with **${em
                 type="button"
                 onClick={() => handleSendQuery(q.label)}
                 disabled={loading}
-                className="text-xs px-2.5 py-1 rounded-md bg-white border border-slate-200 text-slate-700 hover:border-indigo-300 hover:bg-indigo-50/60 hover:text-indigo-700 transition shrink-0 flex items-center gap-1 shadow-2xs"
+                className="text-xs px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/[0.08] text-slate-300 hover:border-cyan-400/40 hover:bg-cyan-500/10 hover:text-cyan-300 transition shrink-0 flex items-center gap-1.5 font-sans"
               >
                 <span>{q.label}</span>
-                <FiArrowRight size={10} className="text-slate-400" />
+                <FiArrowRight size={10} className="text-slate-500" />
               </button>
             ))}
           </div>
         </div>
 
         {/* Chat History Messages Stream */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-4 text-xs">
+        <div className="flex-1 overflow-y-auto p-6 space-y-5 text-xs">
           {chatHistory.map((msg) => (
             <div
               key={msg.id}
               className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}
             >
-              <div className="flex items-center gap-1.5 mb-1 px-1">
-                <span className="font-medium text-[11px] text-slate-500">
+              <div className="flex items-center gap-2 mb-1.5 px-1 font-mono text-[10px]">
+                <span className={msg.sender === 'user' ? 'text-indigo-400 font-semibold' : 'text-cyan-400 font-semibold'}>
                   {msg.sender === 'user' ? 'You' : 'Gemini 1.5 Copilot'}
                 </span>
-                <span className="text-[10px] text-slate-400">{msg.time}</span>
+                <span className="text-slate-500">{msg.time}</span>
               </div>
 
               <div
-                className={`p-4 rounded-xl max-w-[85%] leading-relaxed ${
+                className={`p-5 rounded-2xl max-w-[85%] leading-relaxed ${
                   msg.sender === 'user'
-                    ? 'bg-indigo-600 text-white rounded-br-xs shadow-xs'
-                    : 'bg-white border border-slate-200 text-slate-800 rounded-bl-xs shadow-xs'
+                    ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-br-xs shadow-lg shadow-indigo-600/20'
+                    : 'bg-[#0b101c] border border-white/[0.08] text-slate-200 rounded-bl-xs shadow-xl'
                 }`}
               >
-                <div className="whitespace-pre-wrap space-y-2">
+                <div className="whitespace-pre-wrap space-y-2.5">
                   {msg.text.split('\n').map((line, idx) => {
                     if (line.startsWith('### ')) {
                       return (
-                        <h4 key={idx} className="font-bold text-sm text-slate-900 mt-2 mb-1">
+                        <h4 key={idx} className="font-bold text-sm text-white mt-2 mb-1 font-display">
                           {line.replace('### ', '')}
                         </h4>
                       );
                     }
                     if (line.startsWith('#### ')) {
                       return (
-                        <h5 key={idx} className="font-semibold text-xs text-slate-800 mt-1 mb-1">
+                        <h5 key={idx} className="font-semibold text-xs text-cyan-300 mt-1 mb-1 font-display">
                           {line.replace('#### ', '')}
                         </h5>
                       );
                     }
                     if (line.startsWith('• ') || line.startsWith('- ')) {
                       return (
-                        <div key={idx} className="flex items-start gap-1.5 pl-1 my-0.5">
-                          <span className="text-indigo-600 font-bold">•</span>
+                        <div key={idx} className="flex items-start gap-2 pl-1 my-1">
+                          <span className="text-cyan-400 font-bold">•</span>
                           <span>{line.replace(/^[•-]\s*/, '')}</span>
                         </div>
                       );
@@ -375,19 +380,19 @@ I have real-time access to our entire organizational knowledge graph with **${em
                 </div>
 
                 {msg.sender === 'gemini' && (
-                  <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
-                    <span className="flex items-center gap-1">
-                      <CheckCircle2 size={11} className="text-emerald-500" />
-                      Live Verified Knowledge
+                  <div className="mt-4 pt-3 border-t border-white/[0.08] flex items-center justify-between text-[11px] text-slate-400">
+                    <span className="flex items-center gap-1.5 text-emerald-400 font-mono text-[10px]">
+                      <FiCheckCircle size={12} />
+                      Live Verified Telemetry
                     </span>
                     <button
                       type="button"
                       onClick={() => handleCopyText(msg.text, msg.id)}
-                      className="hover:text-indigo-600 transition flex items-center gap-1"
+                      className="hover:text-cyan-300 transition flex items-center gap-1.5 font-mono text-[11px] text-slate-400 hover:bg-white/[0.04] px-2 py-0.5 rounded"
                     >
                       {copiedId === msg.id ? (
                         <>
-                          <FiCheck className="text-emerald-500" /> Copied
+                          <FiCheck className="text-emerald-400" /> Copied
                         </>
                       ) : (
                         <>
@@ -402,9 +407,9 @@ I have real-time access to our entire organizational knowledge graph with **${em
           ))}
 
           {loading && (
-            <div className="flex items-center gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 text-xs w-fit animate-pulse">
-              <Sparkles className="text-indigo-600 animate-spin" size={14} />
-              <span>Analyzing organizational knowledge graph...</span>
+            <div className="flex items-center gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/[0.08] text-slate-300 text-xs w-fit animate-pulse">
+              <Sparkles className="text-cyan-400 animate-spin" size={16} />
+              <span className="font-mono">Synthesizing live knowledge graph telemetry...</span>
             </div>
           )}
 
@@ -412,35 +417,35 @@ I have real-time access to our entire organizational knowledge graph with **${em
         </div>
 
         {/* Bottom Input Form */}
-        <div className="p-3.5 border-t border-slate-200 bg-white">
+        <div className="p-4 border-t border-white/[0.08] bg-[#0b101c]">
           <form
             onSubmit={(e) => {
               e.preventDefault();
               handleSendQuery();
             }}
-            className="flex items-center gap-2"
+            className="flex items-center gap-3"
           >
             <input
               type="text"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Ask anything about tasks, workloads, departments, or sprint progress..."
+              placeholder="Query anything: deliverable status, workload allocation, sprint blockers..."
               disabled={loading}
-              className="flex-1 saas-input py-2 text-xs"
+              className="flex-1 ts-input py-2.5 px-4 text-xs"
             />
             <button
               type="submit"
               disabled={loading || !question.trim()}
-              className="p-2.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition shrink-0"
+              className="p-3 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 text-white hover:opacity-95 disabled:opacity-40 disabled:cursor-not-allowed transition shrink-0 shadow-lg shadow-indigo-500/20"
               title="Send Inquiry"
             >
-              <FiSend size={14} />
+              <FiSend size={15} />
             </button>
           </form>
-          <div className="flex items-center justify-between text-[10px] text-slate-400 mt-2 px-1">
+          <div className="flex items-center justify-between text-[10px] text-slate-500 mt-2.5 px-1 font-mono">
             <span>Powered by Google Gemini 1.5 Flash</span>
-            <span className="flex items-center gap-1">
-              Press <FiCornerDownLeft size={9} /> to send
+            <span className="flex items-center gap-1 text-slate-400">
+              Press <FiCornerDownLeft size={10} /> to send
             </span>
           </div>
         </div>

@@ -1,11 +1,21 @@
 import React, { useMemo, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { FiCheckCircle, FiShield } from 'react-icons/fi';
+import {
+  FiCheckCircle,
+  FiShield,
+  FiArrowLeft,
+  FiUser,
+  FiMail,
+  FiLock,
+  FiArrowRight,
+  FiCpu,
+  FiActivity,
+} from 'react-icons/fi';
 
 const getPasswordStrength = (pw: string) => {
   let score = 0;
-  if (!pw) return { label: 'Too short', percent: 0, color: 'bg-slate-300' };
+  if (!pw) return { label: 'Too short', percent: 0, color: 'bg-slate-700' };
   if (pw.length >= 8) score += 1;
   if (/[A-Z]/.test(pw)) score += 1;
   if (/[0-9]/.test(pw)) score += 1;
@@ -20,7 +30,7 @@ const getPasswordStrength = (pw: string) => {
       ? 'bg-amber-400'
       : score === 3
       ? 'bg-indigo-500'
-      : 'bg-emerald-500';
+      : 'bg-emerald-400';
   return { label, percent, color };
 };
 
@@ -45,167 +55,246 @@ export const Register: React.FC = () => {
   }, [clearAuthError]);
 
   return (
-    <div className="min-h-screen flex bg-slate-50 text-slate-900">
-      {/* Left Feature Showcase Banner */}
-      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between bg-white p-12 border-r border-slate-200">
+    <div className="min-h-screen flex bg-[#070a12] text-white relative overflow-hidden select-none">
+      {/* Ambient background glows */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 h-[600px] w-[600px] rounded-full bg-gradient-to-tr from-indigo-600/15 via-violet-600/10 to-cyan-500/15 blur-[140px]" />
+        <div className="absolute bottom-10 right-10 h-96 w-96 rounded-full bg-cyan-500/10 blur-[120px]" />
+        <div className="absolute inset-0 bg-grid-white opacity-20" />
+        <div className="absolute inset-0 noise-overlay" />
+      </div>
+
+      {/* Left Feature Showcase Banner (Desktop) */}
+      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 lg:p-16 border-r border-white/10 relative z-10 bg-slate-950/40 backdrop-blur-xl">
         <div>
-          <div className="flex items-center gap-2.5 mb-12">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-600 text-white font-bold text-sm shadow-xs">
+          {/* Brand Mark */}
+          <div className="flex items-center gap-3 mb-16">
+            <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-cyan-500 text-white font-display font-extrabold text-base shadow-lg shadow-indigo-500/30">
               TS
+              <div className="absolute -inset-1 rounded-2xl bg-indigo-500/30 blur-sm -z-10" />
             </div>
-            <span className="text-lg font-bold tracking-tight text-slate-900">Team-Sync Enterprise</span>
+            <div>
+              <span className="text-xl font-display font-bold tracking-tight text-white block">
+                Team-Sync
+              </span>
+              <span className="text-[11px] font-mono text-indigo-400">ENTERPRISE CLOUD</span>
+            </div>
           </div>
 
           <div className="max-w-md">
-            <h2 className="text-3xl font-bold tracking-tight leading-tight mb-4 text-slate-900">
-              Unify your teams, departments, and deliverables in one workspace.
+            <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-xs font-mono text-indigo-300 mb-6">
+              <span className="h-1.5 w-1.5 rounded-full bg-indigo-400 animate-pulse" />
+              <span>THE INTELLIGENCE OPERATING SYSTEM</span>
+            </div>
+
+            <h2 className="text-3xl lg:text-4xl font-display font-black tracking-tight leading-tight mb-4 text-white">
+              Unify teams, roadmaps, and delivery in one shared workspace.
             </h2>
-            <p className="text-slate-500 text-xs leading-relaxed mb-8">
-              Real-time synchronization for engineering, operations, and cross-functional teams with Google Gemini AI intelligence.
+            <p className="text-slate-400 text-sm font-sans leading-relaxed mb-10">
+              Real-time synchronization for engineering, product, and cross-functional teams powered
+              by Google Gemini AI.
             </p>
 
-            <div className="space-y-4 text-xs">
-              <div className="flex items-center gap-3 text-slate-700">
-                <FiCheckCircle className="text-indigo-600 text-base shrink-0" />
-                <span>Automated department capacity tracking & project sync</span>
+            <div className="space-y-5 text-sm font-sans">
+              <div className="flex items-start gap-3.5 text-slate-300">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+                  <FiCheckCircle size={14} />
+                </span>
+                <span>Automated department capacity tracking &amp; cross-team Kanban sync</span>
               </div>
-              <div className="flex items-center gap-3 text-slate-700">
-                <FiCheckCircle className="text-indigo-600 text-base shrink-0" />
-                <span>Interactive employee directory, workloads, and role matrices</span>
+              <div className="flex items-start gap-3.5 text-slate-300">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
+                  <FiActivity size={14} />
+                </span>
+                <span>Interactive employee directory, workloads, and real-time velocity metrics</span>
               </div>
-              <div className="flex items-center gap-3 text-slate-700">
-                <FiShield className="text-indigo-600 text-base shrink-0" />
-                <span>Context-aware AI copilot for immediate organizational answers</span>
+              <div className="flex items-start gap-3.5 text-slate-300">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-violet-500/20 text-violet-400 border border-violet-500/30">
+                  <FiCpu size={14} />
+                </span>
+                <span>Context-aware Gemini AI copilot for immediate organizational answers</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-          <div>© 2026 Team-Sync Cloud</div>
-          <div className="flex gap-4">
-            <span>SOC2 Ready</span>
-            <span>•</span>
-            <span>99.9% Uptime</span>
+        {/* System telemetry footer */}
+        <div className="pt-8 border-t border-white/10 flex items-center justify-between text-xs font-mono text-slate-400">
+          <div>&copy; 2026 Team-Sync Cloud</div>
+          <div className="flex items-center gap-4 text-slate-400">
+            <span className="flex items-center gap-1.5">
+              <FiShield className="text-emerald-400" /> SOC2 Verified
+            </span>
+            <span>&bull;</span>
+            <span className="text-cyan-400">99.99% Uptime</span>
           </div>
         </div>
       </div>
 
       {/* Right Form Pane */}
-      <div className="flex-1 flex items-center justify-center p-6 sm:p-12">
-        <div className="w-full max-w-md bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold text-slate-900 mb-1">Create your account</h1>
-            <p className="text-xs text-slate-500">Join your company on Team-Sync today.</p>
-          </div>
+      <div className="flex-1 flex items-center justify-center p-6 sm:p-12 relative z-10">
+        <div className="w-full max-w-md">
+          {/* Back Button */}
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            className="group mb-6 inline-flex items-center gap-2 text-xs font-mono text-slate-400 hover:text-white transition-colors"
+          >
+            <FiArrowLeft className="transition-transform group-hover:-translate-x-1" />
+            <span>BACK TO TEAM-SYNC HOME</span>
+          </button>
 
-          {error && (
-            <div className="mb-5 rounded-xl border border-rose-200 bg-rose-50 p-3 text-xs text-rose-700">
-              {typeof error === 'string' ? error : String(error)}
-            </div>
-          )}
-
-          <form onSubmit={registerHandleSubmit(onRegisterSubmit)} className="space-y-4 text-xs">
-            <div>
-              <label className="block font-medium text-slate-700 mb-1">
-                Full Name
-              </label>
-              <input
-                {...registerRegister('fullName', { required: 'Full name is required' })}
-                className={`saas-input w-full ${registerErrors.fullName ? 'border-rose-500' : ''}`}
-                placeholder="Sarah Jenkins"
-              />
-              {registerErrors.fullName && (
-                <p className="text-rose-600 text-xs mt-1">{registerErrors.fullName.message}</p>
-              )}
+          {/* Form Card */}
+          <div className="w-full rounded-3xl border border-white/15 bg-slate-900/70 p-8 sm:p-10 shadow-2xl shadow-indigo-950/50 backdrop-blur-2xl">
+            <div className="mb-6">
+              <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-white">
+                Create your account
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-400 font-sans mt-1">
+                Join your organization on Team-Sync today.
+              </p>
             </div>
 
-            <div>
-              <label className="block font-medium text-slate-700 mb-1">
-                Work Email
-              </label>
-              <input
-                {...registerRegister('email', {
-                  required: 'Email is required',
-                  pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Invalid email format' },
-                })}
-                className={`saas-input w-full ${registerErrors.email ? 'border-rose-500' : ''}`}
-                placeholder="sarah.jenkins@company.com"
-                type="email"
-              />
-              {registerErrors.email && (
-                <p className="text-rose-600 text-xs mt-1">{registerErrors.email.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block font-medium text-slate-700 mb-1">
-                Password
-              </label>
-              <input
-                {...registerRegister('password', {
-                  required: 'Password is required',
-                  minLength: { value: 6, message: 'Minimum 6 characters' },
-                })}
-                className={`saas-input w-full ${registerErrors.password ? 'border-rose-500' : ''}`}
-                placeholder="••••••••"
-                type="password"
-              />
-              {registerErrors.password && (
-                <p className="text-rose-600 text-xs mt-1">{registerErrors.password.message}</p>
-              )}
-
-              {/* Password strength meter */}
-              {password && (
-                <div className="mt-2">
-                  <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                    <div
-                      className={`h-full transition-all duration-300 ${strength.color}`}
-                      style={{ width: `${strength.percent}%` }}
-                    />
-                  </div>
-                  <div className="text-[10px] text-slate-500 mt-1 flex justify-between">
-                    <span>Strength: {strength.label}</span>
-                    <span>{strength.percent}%</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="flex items-center pt-1">
-              <input
-                {...registerRegister('terms', { required: 'You must agree to the terms' })}
-                id="terms"
-                type="checkbox"
-                className="h-3.5 w-3.5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
-              />
-              <label htmlFor="terms" className="ml-2 text-xs text-slate-600 cursor-pointer">
-                I agree to the <span className="text-indigo-600 underline">Terms of Service</span> and <span className="text-indigo-600 underline">Privacy Policy</span>.
-              </label>
-            </div>
-            {registerErrors.terms && (
-              <p className="text-rose-600 text-xs">{registerErrors.terms.message}</p>
+            {error && (
+              <div className="mb-5 rounded-2xl border border-rose-500/30 bg-rose-500/10 p-3.5 text-xs text-rose-300 leading-relaxed">
+                {typeof error === 'string' ? error : String(error)}
+              </div>
             )}
 
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="saas-button-primary w-full justify-center py-2.5 text-xs font-semibold disabled:opacity-50 mt-2"
-            >
-              {isLoading ? 'Creating account...' : 'Complete Registration'}
-            </button>
+            <form onSubmit={registerHandleSubmit(onRegisterSubmit)} className="space-y-4 text-xs">
+              {/* Full Name */}
+              <div>
+                <label className="block font-medium text-slate-300 mb-1.5 font-sans">
+                  Full Name
+                </label>
+                <div className="relative">
+                  <FiUser className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm" />
+                  <input
+                    {...registerRegister('fullName', { required: 'Full name is required' })}
+                    className={`ts-input w-full pl-10 ${registerErrors.fullName ? '!border-rose-500' : ''}`}
+                    placeholder="Sarah Jenkins"
+                  />
+                </div>
+                {registerErrors.fullName && (
+                  <p className="text-rose-400 text-xs mt-1.5 font-mono">
+                    {registerErrors.fullName.message}
+                  </p>
+                )}
+              </div>
 
-            <div className="text-center text-xs text-slate-500 pt-4 border-t border-slate-100 mt-5">
-              Already have an account?{' '}
+              {/* Work Email */}
+              <div>
+                <label className="block font-medium text-slate-300 mb-1.5 font-sans">
+                  Work Email Address
+                </label>
+                <div className="relative">
+                  <FiMail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm" />
+                  <input
+                    {...registerRegister('email', {
+                      required: 'Email is required',
+                      pattern: {
+                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                        message: 'Invalid email format',
+                      },
+                    })}
+                    className={`ts-input w-full pl-10 ${registerErrors.email ? '!border-rose-500' : ''}`}
+                    placeholder="sarah.jenkins@company.com"
+                    type="email"
+                  />
+                </div>
+                {registerErrors.email && (
+                  <p className="text-rose-400 text-xs mt-1.5 font-mono">
+                    {registerErrors.email.message}
+                  </p>
+                )}
+              </div>
+
+              {/* Password */}
+              <div>
+                <label className="block font-medium text-slate-300 mb-1.5 font-sans">
+                  Password
+                </label>
+                <div className="relative">
+                  <FiLock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm" />
+                  <input
+                    {...registerRegister('password', {
+                      required: 'Password is required',
+                      minLength: { value: 6, message: 'Minimum 6 characters' },
+                    })}
+                    className={`ts-input w-full pl-10 ${registerErrors.password ? '!border-rose-500' : ''}`}
+                    placeholder="••••••••"
+                    type="password"
+                  />
+                </div>
+                {registerErrors.password && (
+                  <p className="text-rose-400 text-xs mt-1.5 font-mono">
+                    {registerErrors.password.message}
+                  </p>
+                )}
+
+                {/* Password strength meter */}
+                {password && (
+                  <div className="mt-2.5">
+                    <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full transition-all duration-300 ${strength.color}`}
+                        style={{ width: `${strength.percent}%` }}
+                      />
+                    </div>
+                    <div className="text-[10px] font-mono text-slate-400 mt-1.5 flex justify-between">
+                      <span>Strength: {strength.label}</span>
+                      <span>{strength.percent}%</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Terms Checkbox */}
+              <div className="flex items-center pt-2">
+                <input
+                  {...registerRegister('terms', { required: 'You must agree to the terms' })}
+                  id="terms"
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-white/20 bg-slate-900 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-slate-900"
+                />
+                <label htmlFor="terms" className="ml-2.5 text-xs text-slate-300 cursor-pointer font-sans">
+                  I agree to the{' '}
+                  <span className="text-indigo-400 underline hover:text-indigo-300">
+                    Terms of Service
+                  </span>{' '}
+                  and{' '}
+                  <span className="text-indigo-400 underline hover:text-indigo-300">
+                    Privacy Policy
+                  </span>
+                  .
+                </label>
+              </div>
+              {registerErrors.terms && (
+                <p className="text-rose-400 text-xs font-mono">{registerErrors.terms.message}</p>
+              )}
+
+              {/* Submit CTA */}
               <button
-                type="button"
-                onClick={() => navigate('/login')}
-                className="text-indigo-600 hover:text-indigo-800 font-semibold ml-1"
+                type="submit"
+                disabled={isLoading}
+                className="group relative w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-500 via-indigo-600 to-cyan-500 py-3.5 text-sm font-bold text-white shadow-xl shadow-indigo-600/30 transition-all duration-300 hover:shadow-indigo-500/50 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 mt-4"
               >
-                Sign In
+                <span>{isLoading ? 'Creating account...' : 'Complete Registration'}</span>
+                <FiArrowRight className="transition-transform group-hover:translate-x-1" />
               </button>
-            </div>
-          </form>
+
+              <div className="text-center text-xs text-slate-400 pt-5 border-t border-white/10 mt-6 font-sans">
+                Already have an account?{' '}
+                <button
+                  type="button"
+                  onClick={() => navigate('/login')}
+                  className="text-indigo-400 hover:text-indigo-300 font-semibold ml-1 transition-colors"
+                >
+                  Sign In
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>

@@ -123,7 +123,6 @@ export const Home = () => {
   const reviewTasks = tasks.filter((t) => t.status === 'review');
   const todoTasks = tasks.filter((t) => t.status === 'todo');
 
-  // Overdue Tasks: Tasks not completed with priority urgent or past due date
   const overdueTasks = tasks.filter(
     (t) => t.status !== 'completed' && (t.priority === 'urgent' || t.dueDate?.includes('Oct'))
   );
@@ -167,46 +166,49 @@ export const Home = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* 1. Command Center Header Banner (Clean Light Theme) */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-6 animate-fadeIn">
+      {/* 1. Command Center Header Banner */}
+      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-slate-950/90 p-6 sm:p-8 backdrop-blur-2xl shadow-2xl">
+        <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-indigo-500/15 blur-[90px]" />
+        <div className="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-cyan-500/15 blur-[90px]" />
+
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-wider text-indigo-700 mb-1.5">
+            <div className="flex flex-wrap items-center gap-2 text-xs font-mono font-medium text-indigo-400 mb-2">
               <FiCalendar />
               <span>
                 {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
               </span>
-              <span>•</span>
-              <span className="text-emerald-700 font-medium flex items-center gap-1">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Live Sync 99.9%
+              <span>&bull;</span>
+              <span className="text-emerald-400 flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+                Live Telemetry 99.9%
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+            <h1 className="text-2xl sm:text-4xl font-display font-extrabold text-white tracking-tight">
               Welcome back, {employee?.name || 'Alex Morgan'}
             </h1>
-            <p className="mt-1 text-xs sm:text-sm text-slate-600 max-w-2xl leading-relaxed">
-              Executive operational command center connected. Google Gemini 1.5 is active with autonomous sprint
+            <p className="mt-2 text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed font-sans">
+              Executive command center connected. Google Gemini 1.5 is active with autonomous sprint
               completion across all {totalDepartments} enterprise divisions.
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5 shrink-0">
+          <div className="flex items-center gap-3 shrink-0">
             <button
               type="button"
               onClick={handleGenerateBriefing}
               disabled={isSyncing}
-              className="saas-button-secondary text-xs py-2 px-3.5"
+              className="ts-btn-secondary text-xs py-2.5 px-4"
             >
-              <Sparkles size={14} className="text-indigo-600" />
+              <Sparkles size={14} className={`text-cyan-400 ${isSyncing ? 'animate-spin' : ''}`} />
               <span>{isSyncing ? 'Running AI Sync...' : 'Workspace AI Sync'}</span>
             </button>
 
             <button
               type="button"
               onClick={() => navigate('/home/projects')}
-              className="saas-button-primary text-xs py-2 px-3.5"
+              className="ts-btn-primary text-xs py-2.5 px-4"
             >
               <FiPlus size={14} />
               <span>New Task</span>
@@ -215,23 +217,23 @@ export const Home = () => {
         </div>
       </div>
 
-      {/* 2. "Needs Attention / What To Do Next" Alert Ribbon */}
-      <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs">
+      {/* 2. Urgent Attention / Next Priorities Ribbon */}
+      <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 backdrop-blur-xl">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <div className="p-2 rounded-lg bg-amber-50 text-amber-600 border border-amber-200 shrink-0">
-              <AlertCircle size={18} />
+          <div className="flex items-start gap-3.5">
+            <div className="p-2.5 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 shrink-0">
+              <AlertCircle size={20} />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-semibold text-slate-900 uppercase tracking-wider">
+                <span className="text-xs font-mono font-bold text-white uppercase tracking-wider">
                   Needs Attention Right Now
                 </span>
-                <span className="text-[11px] font-bold text-amber-700 bg-amber-50 px-2 py-0.2 rounded border border-amber-200">
+                <span className="text-[10px] font-mono font-bold text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-500/30">
                   {overdueTasks.length} Urgent Items
                 </span>
               </div>
-              <p className="text-xs text-slate-600 mt-0.5">
+              <p className="text-xs text-slate-300 mt-1 font-sans">
                 {overdueTasks.length > 0
                   ? `${overdueTasks[0]?.title} requires action (Assigned to ${overdueTasks[0]?.assigneeName}).`
                   : 'All sprint deliverables are tracking on schedule with zero critical blockers.'}
@@ -239,16 +241,16 @@ export const Home = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2.5 shrink-0">
             {overdueTasks.length > 0 && (
               <button
                 type="button"
                 onClick={() => handleQuickAISolve(overdueTasks[0].id)}
                 disabled={aiSolvingTaskId === overdueTasks[0].id}
-                className="saas-button-secondary text-xs"
+                className="ts-btn-secondary text-xs"
                 title="Use Gemini AI to autonomously solve this task"
               >
-                <Sparkles size={12} className="text-indigo-600" />
+                <Sparkles size={13} className="text-cyan-400" />
                 <span>
                   {aiSolvingTaskId === overdueTasks[0].id ? 'AI Solving...' : 'AI Solve Next Task'}
                 </span>
@@ -258,30 +260,30 @@ export const Home = () => {
             <button
               type="button"
               onClick={() => navigate('/home/projects')}
-              className="saas-button-primary text-xs"
+              className="ts-btn-primary text-xs"
             >
               <span>View All Tasks</span>
-              <FiArrowRight size={12} />
+              <FiArrowRight size={13} />
             </button>
           </div>
         </div>
       </div>
 
-      {/* 3. Core SaaS Metrics Grid (Total Employees, Depts, Active, Completed, Overdue, Velocity) */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+      {/* 3. Core SaaS Telemetry Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
         {/* Total Employees */}
         <div
           onClick={() => navigate('/home/employees')}
-          className="saas-card-hover p-4 cursor-pointer"
+          className="ts-card-hover p-4 cursor-pointer"
         >
-          <div className="flex items-center justify-between text-slate-500 mb-1">
-            <span className="text-[11px] font-medium uppercase tracking-wider">Workforce</span>
-            <div className="p-1.5 rounded-lg bg-indigo-50 text-indigo-600">
+          <div className="flex items-center justify-between text-slate-400 mb-1.5">
+            <span className="text-[10px] font-mono uppercase tracking-wider">Workforce</span>
+            <div className="p-1.5 rounded-lg bg-indigo-500/20 text-indigo-400">
               <FiUsers size={14} />
             </div>
           </div>
-          <div className="text-2xl font-bold text-slate-900">{totalEmployees}</div>
-          <div className="text-[11px] text-emerald-600 font-semibold mt-1 flex items-center gap-1">
+          <div className="text-2xl font-display font-extrabold text-white">{totalEmployees}</div>
+          <div className="text-[10px] text-emerald-400 font-mono mt-1 flex items-center gap-1">
             <span>+100% active sync</span>
           </div>
         </div>
@@ -289,48 +291,48 @@ export const Home = () => {
         {/* Departments */}
         <div
           onClick={() => navigate('/home/departments')}
-          className="saas-card-hover p-4 cursor-pointer"
+          className="ts-card-hover p-4 cursor-pointer"
         >
-          <div className="flex items-center justify-between text-slate-500 mb-1">
-            <span className="text-[11px] font-medium uppercase tracking-wider">Departments</span>
-            <div className="p-1.5 rounded-lg bg-slate-100 text-slate-600">
+          <div className="flex items-center justify-between text-slate-400 mb-1.5">
+            <span className="text-[10px] font-mono uppercase tracking-wider">Departments</span>
+            <div className="p-1.5 rounded-lg bg-cyan-500/20 text-cyan-400">
               <FiLayers size={14} />
             </div>
           </div>
-          <div className="text-2xl font-bold text-slate-900">{totalDepartments}</div>
-          <div className="text-[11px] text-slate-500 mt-1">Cross-functional units</div>
+          <div className="text-2xl font-display font-extrabold text-white">{totalDepartments}</div>
+          <div className="text-[10px] text-slate-400 font-mono mt-1">Cross-functional units</div>
         </div>
 
         {/* Active Tasks */}
         <div
           onClick={() => navigate('/home/projects')}
-          className="saas-card-hover p-4 cursor-pointer"
+          className="ts-card-hover p-4 cursor-pointer"
         >
-          <div className="flex items-center justify-between text-slate-500 mb-1">
-            <span className="text-[11px] font-medium uppercase tracking-wider">Active Tasks</span>
-            <div className="p-1.5 rounded-lg bg-indigo-50 text-indigo-600">
+          <div className="flex items-center justify-between text-slate-400 mb-1.5">
+            <span className="text-[10px] font-mono uppercase tracking-wider">Active Tasks</span>
+            <div className="p-1.5 rounded-lg bg-indigo-500/20 text-indigo-400">
               <FiClock size={14} />
             </div>
           </div>
-          <div className="text-2xl font-bold text-indigo-600">{activeTasks.length}</div>
-          <div className="text-[11px] text-slate-500 mt-1">
-            {inProgressTasks.length} In Progress • {todoTasks.length} To Do
+          <div className="text-2xl font-display font-extrabold text-indigo-400">{activeTasks.length}</div>
+          <div className="text-[10px] text-slate-400 font-mono mt-1">
+            {inProgressTasks.length} In Progress &bull; {todoTasks.length} To Do
           </div>
         </div>
 
         {/* Completed Tasks */}
         <div
           onClick={() => navigate('/home/projects')}
-          className="saas-card-hover p-4 cursor-pointer"
+          className="ts-card-hover p-4 cursor-pointer"
         >
-          <div className="flex items-center justify-between text-slate-500 mb-1">
-            <span className="text-[11px] font-medium uppercase tracking-wider">Completed</span>
-            <div className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600">
+          <div className="flex items-center justify-between text-slate-400 mb-1.5">
+            <span className="text-[10px] font-mono uppercase tracking-wider">Completed</span>
+            <div className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-400">
               <FiCheckCircle size={14} />
             </div>
           </div>
-          <div className="text-2xl font-bold text-emerald-600">{completedTasks.length}</div>
-          <div className="text-[11px] text-emerald-600 font-medium mt-1">
+          <div className="text-2xl font-display font-extrabold text-emerald-400">{completedTasks.length}</div>
+          <div className="text-[10px] text-emerald-400 font-mono mt-1">
             {completionRate}% completion rate
           </div>
         </div>
@@ -338,44 +340,46 @@ export const Home = () => {
         {/* Overdue / Urgent Tasks */}
         <div
           onClick={() => navigate('/home/projects')}
-          className="saas-card-hover p-4 cursor-pointer"
+          className="ts-card-hover p-4 cursor-pointer"
         >
-          <div className="flex items-center justify-between text-slate-500 mb-1">
-            <span className="text-[11px] font-medium uppercase tracking-wider">Overdue</span>
-            <div className="p-1.5 rounded-lg bg-rose-50 text-rose-600">
+          <div className="flex items-center justify-between text-slate-400 mb-1.5">
+            <span className="text-[10px] font-mono uppercase tracking-wider">Overdue</span>
+            <div className="p-1.5 rounded-lg bg-rose-500/20 text-rose-400">
               <FiAlertTriangle size={14} />
             </div>
           </div>
-          <div className="text-2xl font-bold text-rose-600">{overdueTasks.length}</div>
-          <div className="text-[11px] text-rose-500 font-medium mt-1">Immediate focus</div>
+          <div className="text-2xl font-display font-extrabold text-rose-400">{overdueTasks.length}</div>
+          <div className="text-[10px] text-rose-400 font-mono mt-1">Immediate focus</div>
         </div>
 
         {/* AI Velocity */}
         <div
           onClick={handleGenerateBriefing}
-          className="saas-card-hover p-4 cursor-pointer"
+          className="ts-card-hover p-4 cursor-pointer"
         >
-          <div className="flex items-center justify-between text-slate-500 mb-1">
-            <span className="text-[11px] font-medium uppercase tracking-wider">AI Velocity</span>
-            <div className="p-1.5 rounded-lg bg-indigo-50 text-indigo-600">
+          <div className="flex items-center justify-between text-slate-400 mb-1.5">
+            <span className="text-[10px] font-mono uppercase tracking-wider">AI Velocity</span>
+            <div className="p-1.5 rounded-lg bg-cyan-500/20 text-cyan-400">
               <FiTrendingUp size={14} />
             </div>
           </div>
-          <div className="text-2xl font-bold text-indigo-600">96%</div>
-          <div className="text-[11px] text-indigo-600 font-medium mt-1 flex items-center gap-1">
+          <div className="text-2xl font-display font-extrabold text-cyan-400">96%</div>
+          <div className="text-[10px] text-cyan-300 font-mono mt-1 flex items-center gap-1">
             <Sparkles size={11} /> Optimal cadence
           </div>
         </div>
       </div>
 
       {/* 4. Sprint Task Distribution Progress Ribbon */}
-      <div className="saas-card p-4">
-        <div className="flex items-center justify-between mb-2">
-          <div className="text-xs font-semibold text-slate-900">Sprint Task Distribution</div>
-          <span className="text-xs text-slate-500">{tasks.length} Total Deliverables</span>
+      <div className="ts-card p-5">
+        <div className="flex items-center justify-between mb-3">
+          <div className="text-xs font-bold text-white uppercase font-mono">
+            Sprint Task Distribution
+          </div>
+          <span className="text-xs font-mono text-slate-400">{tasks.length} Total Deliverables</span>
         </div>
 
-        <div className="w-full h-3 rounded-full bg-slate-100 flex overflow-hidden">
+        <div className="w-full h-3 rounded-full bg-white/10 flex overflow-hidden">
           <div
             title={`Completed: ${completedTasks.length}`}
             className="bg-emerald-500 h-full transition-all"
@@ -388,86 +392,86 @@ export const Home = () => {
           />
           <div
             title={`In Progress: ${inProgressTasks.length}`}
-            className="bg-amber-400 h-full transition-all"
+            className="bg-cyan-400 h-full transition-all"
             style={{ width: `${(inProgressTasks.length / (tasks.length || 1)) * 100}%` }}
           />
           <div
             title={`To Do: ${todoTasks.length}`}
-            className="bg-slate-300 h-full transition-all"
+            className="bg-slate-700 h-full transition-all"
             style={{ width: `${(todoTasks.length / (tasks.length || 1)) * 100}%` }}
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-4 mt-3 text-xs text-slate-600">
+        <div className="flex flex-wrap items-center gap-5 mt-3.5 text-xs font-mono text-slate-400">
           <div className="flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-emerald-500" />
+            <span className="h-2 w-2 rounded-full bg-emerald-400" />
             <span>Completed ({completedTasks.length})</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-indigo-500" />
+            <span className="h-2 w-2 rounded-full bg-indigo-400" />
             <span>Review ({reviewTasks.length})</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-amber-400" />
+            <span className="h-2 w-2 rounded-full bg-cyan-400" />
             <span>In Progress ({inProgressTasks.length})</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-slate-300" />
+            <span className="h-2 w-2 rounded-full bg-slate-500" />
             <span>To Do ({todoTasks.length})</span>
           </div>
         </div>
       </div>
 
-      {/* 5. Department Performance Overview Table */}
-      <div className="saas-card p-4">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+      {/* 5. Department Performance Matrix Table */}
+      <div className="ts-card p-5">
+        <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
           <div>
-            <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wider">
+            <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
               Department Performance Matrix
             </h3>
-            <p className="text-[11px] text-slate-500">Resource allocation and active deliverables</p>
+            <p className="text-[11px] text-slate-400 mt-0.5">Resource allocation and active deliverables</p>
           </div>
           <button
             type="button"
             onClick={() => navigate('/home/departments')}
-            className="text-xs font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-1"
+            className="text-xs font-mono text-indigo-400 hover:text-indigo-300 flex items-center gap-1 transition"
           >
             <span>All Departments</span>
-            <FiArrowRight size={12} />
+            <FiArrowRight size={13} />
           </button>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="border-b border-slate-100 text-slate-400 font-medium text-[11px]">
-                <th className="pb-2 font-medium">Department</th>
-                <th className="pb-2 font-medium">Lead</th>
-                <th className="pb-2 font-medium">Team Size</th>
-                <th className="pb-2 font-medium">Projects</th>
-                <th className="pb-2 font-medium">Budget</th>
-                <th className="pb-2 font-medium">Health</th>
+              <tr className="border-b border-white/10 text-slate-400 font-mono text-[11px]">
+                <th className="pb-3 font-medium">Department</th>
+                <th className="pb-3 font-medium">Lead</th>
+                <th className="pb-3 font-medium">Team Size</th>
+                <th className="pb-3 font-medium">Projects</th>
+                <th className="pb-3 font-medium">Budget</th>
+                <th className="pb-3 font-medium">Health</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-white/5">
               {departments.slice(0, 5).map((dept) => (
-                <tr key={dept.id} className="hover:bg-slate-50 transition">
-                  <td className="py-2.5 font-semibold text-slate-900">{dept.name}</td>
-                  <td className="py-2.5 text-slate-600">
-                    <div className="flex items-center gap-2">
+                <tr key={dept.id} className="hover:bg-white/[0.02] transition">
+                  <td className="py-3 font-semibold text-white">{dept.name}</td>
+                  <td className="py-3 text-slate-300">
+                    <div className="flex items-center gap-2.5">
                       <img
                         src={dept.leadAvatar}
                         alt={dept.leadName}
-                        className="h-5 w-5 rounded-full object-cover"
+                        className="h-6 w-6 rounded-full object-cover ring-1 ring-white/20"
                       />
                       <span>{dept.leadName}</span>
                     </div>
                   </td>
-                  <td className="py-2.5 text-slate-600">{dept.memberCount} members</td>
-                  <td className="py-2.5 text-slate-600">{dept.activeProjects} active</td>
-                  <td className="py-2.5 font-mono text-slate-600">{dept.budget}</td>
-                  <td className="py-2.5">
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <td className="py-3 text-slate-400 font-mono">{dept.memberCount} members</td>
+                  <td className="py-3 text-slate-400 font-mono">{dept.activeProjects} active</td>
+                  <td className="py-3 font-mono text-slate-300">{dept.budget}</td>
+                  <td className="py-3">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-medium bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
                       Optimal
                     </span>
                   </td>
@@ -481,19 +485,19 @@ export const Home = () => {
       {/* 6. Upcoming Deadlines & Recent Activity Split */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Left: Upcoming Deadlines */}
-        <div className="saas-card p-4 flex flex-col justify-between">
+        <div className="ts-card p-5 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-3.5">
               <div className="flex items-center gap-2">
-                <FiCalendar className="text-indigo-600" size={15} />
-                <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wider">
+                <FiCalendar className="text-indigo-400" size={15} />
+                <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
                   Upcoming Deadlines
                 </h3>
               </div>
               <button
                 type="button"
                 onClick={() => navigate('/home/projects')}
-                className="text-xs text-indigo-600 hover:text-indigo-700 font-medium"
+                className="text-xs font-mono text-indigo-400 hover:text-indigo-300"
               >
                 View all
               </button>
@@ -503,25 +507,25 @@ export const Home = () => {
               {tasks.slice(0, 4).map((task) => (
                 <div
                   key={task.id}
-                  className="p-2.5 rounded-lg border border-slate-100 hover:border-slate-200 bg-slate-50/50 flex items-center justify-between gap-3 text-xs"
+                  className="p-3 rounded-xl border border-white/5 hover:border-white/15 bg-white/[0.02] flex items-center justify-between gap-3 text-xs transition"
                 >
                   <div className="truncate flex-1">
-                    <div className="font-semibold text-slate-900 truncate">{task.title}</div>
-                    <div className="text-[11px] text-slate-500 flex items-center gap-2 mt-0.5">
+                    <div className="font-semibold text-white truncate">{task.title}</div>
+                    <div className="text-[11px] font-mono text-slate-400 flex items-center gap-2 mt-0.5">
                       <span>{task.projectName}</span>
-                      <span>•</span>
+                      <span>&bull;</span>
                       <span>Due: {task.dueDate}</span>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex items-center gap-2.5 shrink-0">
                     <span
-                      className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                      className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-full border ${
                         task.priority === 'urgent'
-                          ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                          ? 'bg-rose-500/20 text-rose-300 border-rose-500/30'
                           : task.priority === 'high'
-                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                          : 'bg-indigo-50 text-indigo-700 border border-indigo-200'
+                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
+                          : 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30'
                       }`}
                     >
                       {task.priority}
@@ -537,10 +541,10 @@ export const Home = () => {
                           })
                         )
                       }
-                      className={`p-1.5 rounded-md border transition ${
+                      className={`p-1.5 rounded-lg border transition ${
                         task.status === 'completed'
-                          ? 'bg-emerald-50 text-emerald-600 border-emerald-200'
-                          : 'bg-white text-slate-400 border-slate-200 hover:text-emerald-600'
+                          ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                          : 'bg-white/5 text-slate-400 border-white/10 hover:text-emerald-400 hover:border-emerald-500/30'
                       }`}
                       title={task.status === 'completed' ? 'Mark Incomplete' : 'Mark Completed'}
                     >
@@ -554,31 +558,36 @@ export const Home = () => {
         </div>
 
         {/* Right: Recent Live Activity Stream */}
-        <div className="saas-card p-4 flex flex-col justify-between">
+        <div className="ts-card p-5 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-3.5">
               <div className="flex items-center gap-2">
-                <FiActivity className="text-emerald-600" size={15} />
-                <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wider">
+                <FiActivity className="text-cyan-400" size={15} />
+                <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
                   Live Activity Stream
                 </h3>
               </div>
-              <span className="text-[11px] text-slate-400">Live feed</span>
+              <span className="text-[10px] font-mono text-emerald-400 flex items-center gap-1">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Live Feed
+              </span>
             </div>
 
             <div className="space-y-3">
               {liveActivities.slice(0, 4).map((act, index) => (
-                <div key={index} className="flex items-start gap-2.5 text-xs">
+                <div key={index} className="flex items-start gap-3 text-xs">
                   <img
                     src={act.avatar}
                     alt={act.user}
-                    className="h-7 w-7 rounded-full object-cover shrink-0 ring-1 ring-slate-200"
+                    className="h-7 w-7 rounded-full object-cover shrink-0 ring-1 ring-white/20"
                   />
                   <div className="flex-1 leading-snug">
-                    <span className="font-semibold text-slate-900">{act.user}</span>{' '}
-                    <span className="text-slate-600">{act.action}</span>{' '}
-                    <span className="font-medium text-indigo-600">{act.target}</span>
-                    <div className="text-[10px] text-slate-400 mt-0.5">{act.time || '10m ago'}</div>
+                    <span className="font-semibold text-white">{act.user}</span>{' '}
+                    <span className="text-slate-400">{act.action}</span>{' '}
+                    <span className="font-medium text-cyan-400">{act.target}</span>
+                    <div className="text-[10px] font-mono text-slate-500 mt-0.5">
+                      {act.time || '10m ago'}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -589,78 +598,80 @@ export const Home = () => {
 
       {/* 7. Executive AI Briefing Modal */}
       {isBriefingModalOpen && briefing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 animate-fadeIn">
-          <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-2xl shadow-2xl p-6 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-start justify-between pb-4 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
+          <div className="bg-slate-900/95 border border-white/15 rounded-3xl w-full max-w-2xl shadow-2xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto backdrop-blur-2xl">
+            <div className="flex items-start justify-between pb-4 border-b border-white/10">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white">
+                <div className="h-11 w-11 rounded-2xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center">
                   <Sparkles size={20} />
                 </div>
                 <div>
-                  <h3 className="text-base font-semibold text-slate-900">
+                  <h3 className="text-base font-bold text-white font-display">
                     Gemini AI Workspace Synchronization Briefing
                   </h3>
-                  <span className="text-xs text-slate-500">Autonomous workforce health & velocity</span>
+                  <span className="text-xs font-mono text-slate-400">
+                    Autonomous workforce health &amp; velocity
+                  </span>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setIsBriefingModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 p-1"
+                className="text-slate-400 hover:text-white p-1"
               >
-                <FiX size={18} />
+                <FiX size={20} />
               </button>
             </div>
 
-            <div className="mt-4 space-y-4 text-xs">
-              <div className="p-4 rounded-xl bg-indigo-50 border border-indigo-100">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[11px] font-bold text-indigo-700 uppercase tracking-wider">
+            <div className="mt-5 space-y-4 text-xs font-sans">
+              <div className="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/25">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[10px] font-mono font-bold text-indigo-300 uppercase tracking-wider">
                     Executive Headline
                   </span>
-                  <span className="text-xs font-bold text-indigo-700 bg-white px-2 py-0.5 rounded border border-indigo-200">
+                  <span className="text-xs font-mono font-bold text-indigo-300 bg-indigo-500/20 px-2.5 py-0.5 rounded-full border border-indigo-500/30">
                     Velocity Score: {briefing.velocityScore}%
                   </span>
                 </div>
-                <div className="text-sm font-semibold text-slate-900">{briefing.headline}</div>
-                <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                <div className="text-sm font-bold text-white font-display">{briefing.headline}</div>
+                <p className="text-xs text-slate-300 mt-2 leading-relaxed font-sans">
                   {briefing.executiveSummary}
                 </p>
               </div>
 
               <div>
-                <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wider mb-2">
+                <h4 className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider mb-2.5">
                   Department Breakdown
                 </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                   {briefing.departmentInsights.map((insight, idx) => (
                     <div
                       key={idx}
-                      className="p-2.5 rounded-lg border border-slate-200 bg-slate-50 flex flex-col justify-between"
+                      className="p-3 rounded-xl border border-white/10 bg-white/[0.02] flex flex-col justify-between"
                     >
                       <div className="flex justify-between items-center mb-1">
-                        <span className="font-semibold text-slate-900">{insight.department}</span>
-                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">
+                        <span className="font-semibold text-white">{insight.department}</span>
+                        <span className="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/15 px-2 py-0.5 rounded-full border border-emerald-500/25">
                           {insight.health}
                         </span>
                       </div>
-                      <p className="text-[11px] text-slate-500">{insight.focus}</p>
+                      <p className="text-[11px] text-slate-400">{insight.focus}</p>
                     </div>
                   ))}
                 </div>
               </div>
 
               <div>
-                <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wider mb-2">
+                <h4 className="text-xs font-mono font-bold text-slate-300 uppercase tracking-wider mb-2.5">
                   Strategic Recommendations
                 </h4>
-                <ul className="space-y-1.5">
+                <ul className="space-y-2">
                   {briefing.keyRecommendations.map((rec, idx) => (
                     <li
                       key={idx}
-                      className="flex items-start gap-2 p-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-700"
+                      className="flex items-start gap-2.5 p-3 rounded-xl bg-white/[0.02] border border-white/10 text-slate-300"
                     >
-                      <FiCheckCircle size={14} className="text-indigo-600 shrink-0 mt-0.5" />
+                      <FiCheckCircle size={15} className="text-indigo-400 shrink-0 mt-0.5" />
                       <span>{rec}</span>
                     </li>
                   ))}
@@ -668,7 +679,7 @@ export const Home = () => {
               </div>
             </div>
 
-            <div className="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between">
+            <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
               <button
                 type="button"
                 onClick={() => {
@@ -676,16 +687,16 @@ export const Home = () => {
                   setCopiedBriefing(true);
                   setTimeout(() => setCopiedBriefing(false), 2000);
                 }}
-                className="saas-button-secondary text-xs"
+                className="ts-btn-secondary text-xs"
               >
-                {copiedBriefing ? <FiCheck className="text-emerald-500" /> : <FiCopy />}
+                {copiedBriefing ? <FiCheck className="text-emerald-400" /> : <FiCopy />}
                 <span>{copiedBriefing ? 'Copied' : 'Copy Briefing'}</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setIsBriefingModalOpen(false)}
-                className="saas-button-primary text-xs"
+                className="ts-btn-primary text-xs"
               >
                 Dismiss
               </button>
