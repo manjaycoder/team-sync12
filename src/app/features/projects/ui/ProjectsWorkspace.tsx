@@ -317,7 +317,7 @@ export const ProjectsWorkspace: React.FC = () => {
     {
       id: 'backlog',
       label: 'Backlog',
-      dotColor: 'bg-slate-500',
+      dotColor: 'bg-slate-400',
       badgeClass: 'bg-white/5 text-slate-400 border border-white/10',
       filter: (t: TaskRecord) => t.status === 'todo' && t.priority === 'low',
       dropStatus: 'todo' as TaskRecord['status'],
@@ -325,24 +325,24 @@ export const ProjectsWorkspace: React.FC = () => {
     {
       id: 'todo',
       label: 'To Do',
-      dotColor: 'bg-indigo-400',
-      badgeClass: 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/30',
+      dotColor: 'bg-[#2563EB]',
+      badgeClass: 'bg-[#2563EB]/15 text-[#60A5FA] border border-[#2563EB]/35',
       filter: (t: TaskRecord) => t.status === 'todo' && t.priority !== 'low',
       dropStatus: 'todo' as TaskRecord['status'],
     },
     {
       id: 'in_progress',
       label: 'In Progress',
-      dotColor: 'bg-cyan-400',
-      badgeClass: 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30',
+      dotColor: 'bg-[#38BDF8]',
+      badgeClass: 'bg-[#38BDF8]/15 text-[#38BDF8] border border-[#38BDF8]/35',
       filter: (t: TaskRecord) => t.status === 'in_progress',
       dropStatus: 'in_progress' as TaskRecord['status'],
     },
     {
       id: 'review',
       label: 'Review',
-      dotColor: 'bg-violet-400',
-      badgeClass: 'bg-violet-500/15 text-violet-300 border border-violet-500/30',
+      dotColor: 'bg-[#7C3AED]',
+      badgeClass: 'bg-[#7C3AED]/15 text-purple-300 border border-[#7C3AED]/35',
       filter: (t: TaskRecord) => t.status === 'review',
       dropStatus: 'review' as TaskRecord['status'],
     },
@@ -350,7 +350,7 @@ export const ProjectsWorkspace: React.FC = () => {
       id: 'completed',
       label: 'Completed',
       dotColor: 'bg-emerald-400',
-      badgeClass: 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30',
+      badgeClass: 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/35',
       filter: (t: TaskRecord) => t.status === 'completed',
       dropStatus: 'completed' as TaskRecord['status'],
     },
@@ -365,25 +365,25 @@ export const ProjectsWorkspace: React.FC = () => {
             <h1 className="text-xl sm:text-2xl font-bold font-display text-white tracking-tight">
               Work Management Hub
             </h1>
-            <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 font-semibold border border-indigo-500/30">
+            <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-[#2563EB]/15 text-[#60A5FA] font-semibold border border-[#2563EB]/35">
               {tasks.length} Deliverables
             </span>
           </div>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1 font-sans">
+          <p className="text-xs sm:text-sm text-[#94A3B8] mt-1 font-sans">
             Coordinate sprints, assign deliverables, collaborate with threads, and solve with Gemini AI.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           {/* View Mode Buttons */}
-          <div className="flex items-center bg-white/[0.04] border border-white/10 rounded-xl p-1 shadow-sm backdrop-blur-md">
+          <div className="flex items-center bg-[#08080a] border border-white/10 rounded-xl p-1 shadow-sm backdrop-blur-md">
             <button
               type="button"
               onClick={() => setViewMode('kanban')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition ${
                 viewMode === 'kanban'
-                  ? 'bg-gradient-to-r from-indigo-500 to-cyan-500 text-white font-semibold shadow-sm'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-white text-black font-bold shadow-sm'
+                  : 'text-neutral-400 hover:text-white'
               }`}
             >
               <FiGrid size={13} />
@@ -394,8 +394,8 @@ export const ProjectsWorkspace: React.FC = () => {
               onClick={() => setViewMode('list')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition ${
                 viewMode === 'list'
-                  ? 'bg-gradient-to-r from-indigo-500 to-cyan-500 text-white font-semibold shadow-sm'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-white text-black font-bold shadow-sm'
+                  : 'text-neutral-400 hover:text-white'
               }`}
             >
               <FiList size={13} />
@@ -406,8 +406,8 @@ export const ProjectsWorkspace: React.FC = () => {
               onClick={() => setViewMode('calendar')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition ${
                 viewMode === 'calendar'
-                  ? 'bg-gradient-to-r from-indigo-500 to-cyan-500 text-white font-semibold shadow-sm'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-white text-black font-bold shadow-sm'
+                  : 'text-neutral-400 hover:text-white'
               }`}
             >
               <FiCalendar size={13} />
@@ -418,8 +418,8 @@ export const ProjectsWorkspace: React.FC = () => {
               onClick={() => setViewMode('projects')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition ${
                 viewMode === 'projects'
-                  ? 'bg-gradient-to-r from-indigo-500 to-cyan-500 text-white font-semibold shadow-sm'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-white text-black font-bold shadow-sm'
+                  : 'text-neutral-400 hover:text-white'
               }`}
             >
               <FiFolder size={13} />
@@ -518,7 +518,7 @@ export const ProjectsWorkspace: React.FC = () => {
             return (
               <div
                 key={col.id}
-                className="bg-slate-950/70 border border-white/10 rounded-2xl p-3.5 flex flex-col min-h-[580px] backdrop-blur-xl"
+                className="bg-[#0D1424]/90 border border-[rgba(148,163,184,0.15)] rounded-2xl p-3.5 flex flex-col min-h-[580px] backdrop-blur-xl shadow-lg"
               >
                 {/* Column Header */}
                 <div className="flex items-center justify-between mb-3.5 px-1.5">
@@ -552,21 +552,21 @@ export const ProjectsWorkspace: React.FC = () => {
                                 ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
                                 : task.priority === 'low'
                                 ? 'bg-white/5 text-slate-400 border-white/10'
-                                : 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30'
+                                : 'bg-[#2563EB]/20 text-[#60A5FA] border border-[#2563EB]/35'
                             }`}
                           >
                             {task.priority}
                           </span>
 
                           {task.completedByAI && (
-                            <span className="inline-flex items-center gap-1 text-[9px] font-mono font-bold bg-cyan-500/15 text-cyan-300 px-2 py-0.5 rounded-full border border-cyan-500/30">
+                            <span className="inline-flex items-center gap-1 text-[9px] font-mono font-bold bg-[#38BDF8]/15 text-[#38BDF8] px-2 py-0.5 rounded-full border border-[#38BDF8]/35">
                               <Sparkles size={10} /> AI Solved
                             </span>
                           )}
                         </div>
 
                         {/* Title */}
-                        <h4 className="text-xs font-semibold text-white group-hover:text-indigo-400 transition leading-snug">
+                        <h4 className="text-xs font-semibold text-white group-hover:text-[#60A5FA] transition leading-snug">
                           {task.title}
                         </h4>
 
@@ -831,14 +831,14 @@ export const ProjectsWorkspace: React.FC = () => {
                       </div>
                       <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
                         <div
-                          className="bg-gradient-to-r from-indigo-500 to-cyan-400 h-full rounded-full"
+                          className="bg-white h-full rounded-full"
                           style={{ width: `${prog}%` }}
                         />
                       </div>
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-slate-400 font-mono">
+                  <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-neutral-400 font-mono">
                     <span>Lead: {proj.leadName}</span>
                     <span className="text-white font-semibold">{proj.budget}</span>
                   </div>
@@ -851,14 +851,14 @@ export const ProjectsWorkspace: React.FC = () => {
 
       {/* 7. TASK DETAIL DRAWER */}
       {selectedTask && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm animate-fadeIn">
-          <div className="w-full max-w-xl bg-slate-900/95 h-full shadow-2xl flex flex-col border-l border-white/15 animate-slideInRight backdrop-blur-2xl">
+        <div className="fixed inset-0 z-50 flex justify-end bg-black/75 backdrop-blur-md animate-fadeIn selection:bg-white selection:text-black">
+          <div className="w-full max-w-xl bg-[#08080a] h-full shadow-2xl flex flex-col border-l border-white/10 text-white animate-slideInRight backdrop-blur-2xl">
             {/* Drawer Header */}
-            <div className="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between bg-slate-950/60">
+            <div className="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between bg-[#0c0c0e]">
               <div className="flex items-center gap-2 font-mono text-xs">
-                <span className="text-slate-400 uppercase">{selectedTask.projectName}</span>
+                <span className="text-neutral-400 uppercase">{selectedTask.projectName}</span>
                 <span className="text-white/20">/</span>
-                <span className="text-cyan-400">{selectedTask.department}</span>
+                <span className="text-white">{selectedTask.department}</span>
               </div>
               <button
                 type="button"
@@ -938,17 +938,17 @@ export const ProjectsWorkspace: React.FC = () => {
               </div>
 
               {/* Gemini AI Autonomous Solver Box */}
-              <div className="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/25 space-y-2.5">
+              <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/15 space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 font-bold text-indigo-300 font-display">
-                    <Sparkles size={16} className="text-cyan-400" />
+                  <div className="flex items-center gap-2 font-bold text-white font-display">
+                    <Sparkles size={16} className="text-white" />
                     <span>Gemini AI Autonomous Execution</span>
                   </div>
                   <button
                     type="button"
                     onClick={() => handleAiSolve(selectedTask)}
                     disabled={aiLoadingTaskId === selectedTask.id}
-                    className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 text-white shadow-md hover:scale-105 transition"
+                    className="text-xs font-bold px-3.5 py-1.5 rounded-xl bg-white text-black shadow-md hover:bg-neutral-200 transition"
                   >
                     {aiLoadingTaskId === selectedTask.id ? 'Executing...' : 'Solve Deliverable'}
                   </button>

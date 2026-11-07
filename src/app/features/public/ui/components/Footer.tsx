@@ -61,7 +61,7 @@ export const Footer = () => {
               <li>
                 <button
                   type="button"
-                  onClick={() => navigate('/login')}
+                  onClick={() => navigate('/sign-in')}
                   className="hover:text-white transition-colors text-left"
                 >
                   Workspace Sign-In

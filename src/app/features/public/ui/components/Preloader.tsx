@@ -102,19 +102,20 @@ export const Preloader = ({ onComplete }: PreloaderProps) => {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-50 flex flex-col items-center justify-between bg-[#070a12] p-8 text-white select-none overflow-hidden"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-between bg-black p-8 text-white select-none overflow-hidden selection:bg-white selection:text-black"
       style={{ willChange: 'transform' }}
     >
-      {/* Ambient background glow */}
+      {/* Ambient background glow & grid matching landing page */}
       <div className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center">
-        <div className="h-[400px] w-[400px] rounded-full bg-indigo-600/15 blur-[120px] animate-pulse-ring" />
-        <div className="h-[300px] w-[300px] rounded-full bg-cyan-500/10 blur-[100px]" />
+        <div className="h-[500px] w-[500px] rounded-full bg-white/[0.04] blur-[140px]" />
+        <div className="absolute inset-0 bg-grid-white opacity-35" />
+        <div className="absolute inset-0 noise-overlay" />
       </div>
 
       {/* Top Header info */}
-      <div className="w-full max-w-6xl flex items-center justify-between text-xs font-mono tracking-wider text-slate-400">
+      <div className="w-full max-w-6xl flex items-center justify-between text-xs font-mono tracking-wider text-neutral-400">
         <div className="flex items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-indigo-500 animate-ping" />
+          <span className="h-2 w-2 rounded-full bg-white animate-ping" />
           <span>TEAM-SYNC SYSTEM INITIALIZATION</span>
         </div>
         <div className="hidden sm:block">EST. 2026 // ENTERPRISE AI SUITE</div>
@@ -122,25 +123,19 @@ export const Preloader = ({ onComplete }: PreloaderProps) => {
 
       {/* Center Brand Monogram & Title */}
       <div className="flex flex-col items-center text-center my-auto">
-        <div className="relative mb-6 flex h-20 w-20 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] p-4 shadow-2xl backdrop-blur-xl">
+        <div className="relative mb-6 flex h-20 w-20 items-center justify-center rounded-2xl border border-white/20 bg-white/5 p-4 shadow-2xl backdrop-blur-xl">
           <svg className="h-full w-full" viewBox="0 0 48 48" fill="none">
-            <rect width="48" height="48" rx="12" fill="url(#preloader-grad)" fillOpacity="0.15" />
+            <rect width="48" height="48" rx="12" fill="#ffffff" fillOpacity="0.08" />
             <path
               ref={logoPathRef}
               d="M14 16H34M24 16V36M16 32L32 32"
-              stroke="#6366f1"
+              stroke="#ffffff"
               strokeWidth="3.5"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <defs>
-              <linearGradient id="preloader-grad" x1="0" y1="0" x2="48" y2="48">
-                <stop stopColor="#6366f1" />
-                <stop offset="1" stopColor="#06b6d4" />
-              </linearGradient>
-            </defs>
           </svg>
-          <div className="absolute -inset-1 rounded-2xl bg-indigo-500/20 blur-md -z-10" />
+          <div className="absolute -inset-1 rounded-2xl bg-white/10 blur-md -z-10" />
         </div>
 
         <h1
@@ -151,7 +146,7 @@ export const Preloader = ({ onComplete }: PreloaderProps) => {
         </h1>
         <p
           ref={subtitleRef}
-          className="mt-2 text-sm sm:text-base font-sans tracking-wide text-slate-400"
+          className="mt-2 text-sm sm:text-base font-sans tracking-wide text-neutral-400"
         >
           Synchronizing Workspace Intelligence & Execution
         </p>
@@ -159,19 +154,19 @@ export const Preloader = ({ onComplete }: PreloaderProps) => {
 
       {/* Bottom Progress Counter & Bar */}
       <div className="w-full max-w-md flex flex-col gap-3">
-        <div className="flex items-baseline justify-between font-mono text-xs text-slate-400">
+        <div className="flex items-baseline justify-between font-mono text-xs text-neutral-400">
           <span className="tracking-widest uppercase">Booting Core Engine</span>
-          <span ref={counterRef} className="text-sm font-semibold text-indigo-400">
+          <span ref={counterRef} className="text-sm font-semibold text-white">
             {percent.toString().padStart(2, '0')}%
           </span>
         </div>
-        <div className="h-[3px] w-full overflow-hidden rounded-full bg-white/10">
+        <div className="h-[3px] w-full overflow-hidden rounded-full bg-white/15">
           <div
             ref={progressBarRef}
-            className="h-full w-0 bg-gradient-to-r from-indigo-500 via-cyan-400 to-indigo-300"
+            className="h-full w-0 bg-white shadow-[0_0_12px_rgba(255,255,255,0.7)]"
           />
         </div>
-        <div className="flex justify-between text-[11px] font-mono text-slate-500">
+        <div className="flex justify-between text-[11px] font-mono text-neutral-500">
           <span>AI COPILOT: READY</span>
           <span>KANBAN FLOW: SYNCD</span>
         </div>

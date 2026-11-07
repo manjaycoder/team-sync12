@@ -80,7 +80,7 @@ export const CustomCursor = () => {
       {/* Precision Center Dot */}
       <div
         ref={dotRef}
-        className={`fixed top-0 left-0 -ml-1 -mt-1 h-2 w-2 rounded-full bg-indigo-400 transition-transform duration-150 ${
+        className={`fixed top-0 left-0 -ml-1 -mt-1 h-2 w-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)] transition-transform duration-150 ${
           cursorState === 'hover' ? 'scale-0' : 'scale-100'
         }`}
         style={{ willChange: 'transform' }}
@@ -89,17 +89,17 @@ export const CustomCursor = () => {
       {/* Fluid Outer Ring */}
       <div
         ref={ringRef}
-        className={`fixed top-0 left-0 flex items-center justify-center rounded-full border border-indigo-400/40 transition-all duration-300 ${
+        className={`fixed top-0 left-0 flex items-center justify-center rounded-full border border-white/30 transition-all duration-300 ${
           cursorState === 'default'
-            ? '-ml-5 -mt-5 h-10 w-10 bg-indigo-500/5 backdrop-blur-[1px]'
+            ? '-ml-5 -mt-5 h-10 w-10 bg-white/[0.04] backdrop-blur-[1px]'
             : cursorState === 'hover'
-            ? '-ml-7 -mt-7 h-14 w-14 border-indigo-300 bg-indigo-500/15 backdrop-blur-[2px]'
-            : '-ml-9 -mt-9 h-18 w-18 border-cyan-400 bg-slate-900/80 backdrop-blur-md shadow-lg shadow-cyan-500/20'
+            ? '-ml-7 -mt-7 h-14 w-14 border-white bg-white/15 backdrop-blur-[2px] shadow-[0_0_20px_rgba(255,255,255,0.2)]'
+            : '-ml-9 -mt-9 h-18 w-18 border-white bg-black/90 backdrop-blur-md shadow-lg shadow-white/20'
         }`}
         style={{ willChange: 'transform' }}
       >
         {cursorText && (
-          <span className="text-[10px] font-mono font-bold tracking-widest text-cyan-300 select-none">
+          <span className="text-[10px] font-mono font-bold tracking-widest text-white select-none">
             {cursorText}
           </span>
         )}

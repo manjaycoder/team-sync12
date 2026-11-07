@@ -1,60 +1,56 @@
 import { useState } from 'react';
-import { useSmoothScroll } from './hooks/useSmoothScroll';
+import { TSNavbar } from './components/TSNavbar';
+import { TSHero } from './components/TSHero';
+import { TSFeatures } from './components/TSFeatures';
+import { TSWorkflowDiagram } from './components/TSWorkflowDiagram';
+import { TSInteractiveDemo } from './components/TSInteractiveDemo';
+import { TSAnalytics } from './components/TSAnalytics';
+import { TSCTA } from './components/TSCTA';
+import { TSFooter } from './components/TSFooter';
 import { Preloader } from './components/Preloader';
 import { CustomCursor } from './components/CustomCursor';
-import { Navbar } from './components/Navbar';
-import { HeroSection } from './components/HeroSection';
-import { BenefitsGrid } from './components/BenefitsGrid';
-import { InteractiveShowcase } from './components/InteractiveShowcase';
-import { BentoFeatures } from './components/BentoFeatures';
-import { WorkflowTimeline } from './components/WorkflowTimeline';
-import { TestimonialDeck } from './components/TestimonialDeck';
-import { CTASection } from './components/CTASection';
-import { Footer } from './components/Footer';
+import { useSmoothScroll } from './hooks/useSmoothScroll';
 
 const PublicWebsite = () => {
   const [preloaderDone, setPreloaderDone] = useState(false);
 
-  // Initialize Lenis smooth scroll engine
+  // Initialize smooth scroll engine
   useSmoothScroll(preloaderDone);
 
   return (
-    <div className="relative min-h-screen bg-[#090d16] text-white selection:bg-indigo-500/30 selection:text-indigo-200 antialiased overflow-x-hidden">
+    <div className="relative min-h-screen text-white selection:bg-white selection:text-black antialiased overflow-x-hidden font-sans bg-black">
       {/* Branded Preloader */}
       {!preloaderDone && <Preloader onComplete={() => setPreloaderDone(true)} />}
 
       {/* Desktop Custom Magnetic Cursor */}
       <CustomCursor />
 
-      {/* Adaptive Floating Glass Navigation */}
-      <Navbar />
+      {/* Floating Monochromatic Awwwards Navigation */}
+      <TSNavbar />
 
-      {/* Main Content Sections */}
+      {/* Main Experience Flow */}
       <main className="relative z-10">
-        {/* Hero Section */}
-        <HeroSection />
+        {/* 1. Hero Section with 3D Card + Collaboration Network (#1) */}
+        <TSHero />
 
-        {/* The Value / Platform Section */}
-        <BenefitsGrid />
+        {/* 2. Visual Features Grid with Monochromatic 3D Tilt Cards */}
+        <TSFeatures />
 
-        {/* Live Interactive Product Simulator */}
-        <InteractiveShowcase />
+        {/* 3. Interactive Workflow Architecture (React Flow) */}
+        <TSWorkflowDiagram />
 
-        {/* Features Bento Grid */}
-        <BentoFeatures />
+        {/* 4. Live Visual Feature & Product Demo (Interactive Kanban Simulator, Gemini Copilot, & 3D Spatial Canvas #2) */}
+        <TSInteractiveDemo />
 
-        {/* Workflow / How It Works */}
-        <WorkflowTimeline />
+        {/* 5. 3D Telemetry Matrix (#3) + Predictive Recharts */}
+        <TSAnalytics />
 
-        {/* Testimonials Deck */}
-        <TestimonialDeck />
-
-        {/* High-Impact Closing CTA */}
-        <CTASection />
+        {/* 6. Closing High-Impact Call to Action (100% Free / No Payment Required) */}
+        <TSCTA />
       </main>
 
       {/* Architectural Mega-Footer */}
-      <Footer />
+      <TSFooter />
     </div>
   );
 };

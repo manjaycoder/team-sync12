@@ -168,13 +168,13 @@ export const Home = () => {
   return (
     <div className="space-y-6 animate-fadeIn">
       {/* 1. Command Center Header Banner */}
-      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-slate-950/90 p-6 sm:p-8 backdrop-blur-2xl shadow-2xl">
-        <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-indigo-500/15 blur-[90px]" />
-        <div className="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-cyan-500/15 blur-[90px]" />
+      <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#08080a] p-6 sm:p-8 backdrop-blur-2xl shadow-2xl">
+        <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-white/[0.04] blur-[90px]" />
+        <div className="pointer-events-none absolute -bottom-24 -left-24 h-64 w-64 rounded-full bg-white/[0.03] blur-[90px]" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <div className="flex flex-wrap items-center gap-2 text-xs font-mono font-medium text-indigo-400 mb-2">
+            <div className="flex flex-wrap items-center gap-2 text-xs font-mono font-medium text-neutral-400 mb-2">
               <FiCalendar />
               <span>
                 {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
@@ -188,7 +188,7 @@ export const Home = () => {
             <h1 className="text-2xl sm:text-4xl font-display font-extrabold text-white tracking-tight">
               Welcome back, {employee?.name || 'Alex Morgan'}
             </h1>
-            <p className="mt-2 text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed font-sans">
+            <p className="mt-2 text-xs sm:text-sm text-neutral-300 max-w-2xl leading-relaxed font-sans">
               Executive command center connected. Google Gemini 1.5 is active with autonomous sprint
               completion across all {totalDepartments} enterprise divisions.
             </p>
@@ -201,7 +201,7 @@ export const Home = () => {
               disabled={isSyncing}
               className="ts-btn-secondary text-xs py-2.5 px-4"
             >
-              <Sparkles size={14} className={`text-cyan-400 ${isSyncing ? 'animate-spin' : ''}`} />
+              <Sparkles size={14} className={`text-white ${isSyncing ? 'animate-spin' : ''}`} />
               <span>{isSyncing ? 'Running AI Sync...' : 'Workspace AI Sync'}</span>
             </button>
 
@@ -276,9 +276,9 @@ export const Home = () => {
           onClick={() => navigate('/home/employees')}
           className="ts-card-hover p-4 cursor-pointer"
         >
-          <div className="flex items-center justify-between text-slate-400 mb-1.5">
+          <div className="flex items-center justify-between text-neutral-400 mb-1.5">
             <span className="text-[10px] font-mono uppercase tracking-wider">Workforce</span>
-            <div className="p-1.5 rounded-lg bg-indigo-500/20 text-indigo-400">
+            <div className="p-1.5 rounded-lg bg-white/10 text-white">
               <FiUsers size={14} />
             </div>
           </div>
@@ -293,14 +293,14 @@ export const Home = () => {
           onClick={() => navigate('/home/departments')}
           className="ts-card-hover p-4 cursor-pointer"
         >
-          <div className="flex items-center justify-between text-slate-400 mb-1.5">
+          <div className="flex items-center justify-between text-neutral-400 mb-1.5">
             <span className="text-[10px] font-mono uppercase tracking-wider">Departments</span>
-            <div className="p-1.5 rounded-lg bg-cyan-500/20 text-cyan-400">
+            <div className="p-1.5 rounded-lg bg-white/10 text-white">
               <FiLayers size={14} />
             </div>
           </div>
           <div className="text-2xl font-display font-extrabold text-white">{totalDepartments}</div>
-          <div className="text-[10px] text-slate-400 font-mono mt-1">Cross-functional units</div>
+          <div className="text-[10px] text-neutral-400 font-mono mt-1">Cross-functional units</div>
         </div>
 
         {/* Active Tasks */}
@@ -308,14 +308,14 @@ export const Home = () => {
           onClick={() => navigate('/home/projects')}
           className="ts-card-hover p-4 cursor-pointer"
         >
-          <div className="flex items-center justify-between text-slate-400 mb-1.5">
+          <div className="flex items-center justify-between text-neutral-400 mb-1.5">
             <span className="text-[10px] font-mono uppercase tracking-wider">Active Tasks</span>
-            <div className="p-1.5 rounded-lg bg-indigo-500/20 text-indigo-400">
+            <div className="p-1.5 rounded-lg bg-white/10 text-white">
               <FiClock size={14} />
             </div>
           </div>
-          <div className="text-2xl font-display font-extrabold text-indigo-400">{activeTasks.length}</div>
-          <div className="text-[10px] text-slate-400 font-mono mt-1">
+          <div className="text-2xl font-display font-extrabold text-white">{activeTasks.length}</div>
+          <div className="text-[10px] text-neutral-400 font-mono mt-1">
             {inProgressTasks.length} In Progress &bull; {todoTasks.length} To Do
           </div>
         </div>
@@ -357,14 +357,14 @@ export const Home = () => {
           onClick={handleGenerateBriefing}
           className="ts-card-hover p-4 cursor-pointer"
         >
-          <div className="flex items-center justify-between text-slate-400 mb-1.5">
+          <div className="flex items-center justify-between text-neutral-400 mb-1.5">
             <span className="text-[10px] font-mono uppercase tracking-wider">AI Velocity</span>
-            <div className="p-1.5 rounded-lg bg-cyan-500/20 text-cyan-400">
+            <div className="p-1.5 rounded-lg bg-white/10 text-white">
               <FiTrendingUp size={14} />
             </div>
           </div>
-          <div className="text-2xl font-display font-extrabold text-cyan-400">96%</div>
-          <div className="text-[10px] text-cyan-300 font-mono mt-1 flex items-center gap-1">
+          <div className="text-2xl font-display font-extrabold text-white">96%</div>
+          <div className="text-[10px] text-neutral-300 font-mono mt-1 flex items-center gap-1">
             <Sparkles size={11} /> Optimal cadence
           </div>
         </div>
@@ -376,7 +376,7 @@ export const Home = () => {
           <div className="text-xs font-bold text-white uppercase font-mono">
             Sprint Task Distribution
           </div>
-          <span className="text-xs font-mono text-slate-400">{tasks.length} Total Deliverables</span>
+          <span className="text-xs font-mono text-neutral-400">{tasks.length} Total Deliverables</span>
         </div>
 
         <div className="w-full h-3 rounded-full bg-white/10 flex overflow-hidden">
@@ -387,36 +387,36 @@ export const Home = () => {
           />
           <div
             title={`Under Review: ${reviewTasks.length}`}
-            className="bg-indigo-500 h-full transition-all"
+            className="bg-white/80 h-full transition-all"
             style={{ width: `${(reviewTasks.length / (tasks.length || 1)) * 100}%` }}
           />
           <div
             title={`In Progress: ${inProgressTasks.length}`}
-            className="bg-cyan-400 h-full transition-all"
+            className="bg-white/40 h-full transition-all"
             style={{ width: `${(inProgressTasks.length / (tasks.length || 1)) * 100}%` }}
           />
           <div
             title={`To Do: ${todoTasks.length}`}
-            className="bg-slate-700 h-full transition-all"
+            className="bg-white/15 h-full transition-all"
             style={{ width: `${(todoTasks.length / (tasks.length || 1)) * 100}%` }}
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-5 mt-3.5 text-xs font-mono text-slate-400">
+        <div className="flex flex-wrap items-center gap-5 mt-3.5 text-xs font-mono text-neutral-400">
           <div className="flex items-center gap-1.5">
             <span className="h-2 w-2 rounded-full bg-emerald-400" />
             <span>Completed ({completedTasks.length})</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-indigo-400" />
+            <span className="h-2 w-2 rounded-full bg-white/80" />
             <span>Review ({reviewTasks.length})</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-cyan-400" />
+            <span className="h-2 w-2 rounded-full bg-white/40" />
             <span>In Progress ({inProgressTasks.length})</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-slate-500" />
+            <span className="h-2 w-2 rounded-full bg-white/15" />
             <span>To Do ({todoTasks.length})</span>
           </div>
         </div>
@@ -489,7 +489,7 @@ export const Home = () => {
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-3.5">
               <div className="flex items-center gap-2">
-                <FiCalendar className="text-indigo-400" size={15} />
+                <FiCalendar className="text-[#60A5FA]" size={15} />
                 <h3 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
                   Upcoming Deadlines
                 </h3>
@@ -497,7 +497,7 @@ export const Home = () => {
               <button
                 type="button"
                 onClick={() => navigate('/home/projects')}
-                className="text-xs font-mono text-indigo-400 hover:text-indigo-300"
+                className="text-xs font-mono text-[#60A5FA] hover:text-[#38BDF8]"
               >
                 View all
               </button>
@@ -525,7 +525,7 @@ export const Home = () => {
                           ? 'bg-rose-500/20 text-rose-300 border-rose-500/30'
                           : task.priority === 'high'
                           ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
-                          : 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30'
+                          : 'bg-white/10 text-white border-white/20'
                       }`}
                     >
                       {task.priority}
@@ -598,18 +598,18 @@ export const Home = () => {
 
       {/* 7. Executive AI Briefing Modal */}
       {isBriefingModalOpen && briefing && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
-          <div className="bg-slate-900/95 border border-white/15 rounded-3xl w-full max-w-2xl shadow-2xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto backdrop-blur-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-fadeIn selection:bg-white selection:text-black">
+          <div className="bg-[#08080a]/95 border border-white/15 rounded-3xl w-full max-w-2xl shadow-2xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto backdrop-blur-2xl text-white">
             <div className="flex items-start justify-between pb-4 border-b border-white/10">
               <div className="flex items-center gap-3">
-                <div className="h-11 w-11 rounded-2xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center">
+                <div className="h-11 w-11 rounded-2xl bg-white text-black flex items-center justify-center shadow-md shadow-white/20">
                   <Sparkles size={20} />
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-white font-display">
                     Gemini AI Workspace Synchronization Briefing
                   </h3>
-                  <span className="text-xs font-mono text-slate-400">
+                  <span className="text-xs font-mono text-neutral-400">
                     Autonomous workforce health &amp; velocity
                   </span>
                 </div>
@@ -617,24 +617,24 @@ export const Home = () => {
               <button
                 type="button"
                 onClick={() => setIsBriefingModalOpen(false)}
-                className="text-slate-400 hover:text-white p-1"
+                className="text-neutral-400 hover:text-white p-1"
               >
                 <FiX size={20} />
               </button>
             </div>
 
             <div className="mt-5 space-y-4 text-xs font-sans">
-              <div className="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/25">
+              <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/15">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] font-mono font-bold text-indigo-300 uppercase tracking-wider">
+                  <span className="text-[10px] font-mono font-bold text-neutral-400 uppercase tracking-wider">
                     Executive Headline
                   </span>
-                  <span className="text-xs font-mono font-bold text-indigo-300 bg-indigo-500/20 px-2.5 py-0.5 rounded-full border border-indigo-500/30">
+                  <span className="text-xs font-mono font-bold text-white bg-white/10 px-2.5 py-0.5 rounded-full border border-white/20">
                     Velocity Score: {briefing.velocityScore}%
                   </span>
                 </div>
                 <div className="text-sm font-bold text-white font-display">{briefing.headline}</div>
-                <p className="text-xs text-slate-300 mt-2 leading-relaxed font-sans">
+                <p className="text-xs text-neutral-300 mt-2 leading-relaxed font-sans">
                   {briefing.executiveSummary}
                 </p>
               </div>
@@ -671,7 +671,7 @@ export const Home = () => {
                       key={idx}
                       className="flex items-start gap-2.5 p-3 rounded-xl bg-white/[0.02] border border-white/10 text-slate-300"
                     >
-                      <FiCheckCircle size={15} className="text-indigo-400 shrink-0 mt-0.5" />
+                      <FiCheckCircle size={15} className="text-white shrink-0 mt-0.5" />
                       <span>{rec}</span>
                     </li>
                   ))}

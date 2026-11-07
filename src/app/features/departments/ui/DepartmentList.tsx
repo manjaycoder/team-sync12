@@ -141,11 +141,11 @@ export const DepartmentList = () => {
 
       {/* 2. Enterprise Telemetry Card */}
       <div className="ts-card p-5 relative overflow-hidden group">
-        <div className="absolute -right-24 -top-24 w-60 h-60 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-indigo-500/15 transition-all duration-700" />
+        <div className="absolute -right-24 -top-24 w-60 h-60 bg-[#2563EB]/10 rounded-full blur-3xl pointer-events-none group-hover:bg-[#2563EB]/15 transition-all duration-700" />
         
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
           <div className="flex items-start gap-4">
-            <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20 shrink-0">
+            <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-[#2563EB] to-[#38BDF8] flex items-center justify-center text-white shadow-lg shadow-[#2563EB]/30 shrink-0">
               <FiBriefcase size={20} />
             </div>
             <div>
@@ -175,7 +175,7 @@ export const DepartmentList = () => {
             </div>
             <div>
               <span className="text-[10px] uppercase font-mono tracking-wider text-slate-500 block">Deliverables</span>
-              <span className="text-lg font-bold text-indigo-400 font-mono">{tasks.length}</span>
+              <span className="text-lg font-bold text-[#60A5FA] font-mono">{tasks.length}</span>
               <span className="text-[10px] text-slate-400 block">Active Tasks</span>
             </div>
           </div>
@@ -195,14 +195,14 @@ export const DepartmentList = () => {
           />
         </div>
 
-        <div className="flex items-center gap-1.5 self-end sm:self-auto bg-[#0e1422] p-1 rounded-xl border border-white/[0.08]">
+        <div className="flex items-center gap-1.5 self-end sm:self-auto bg-[#08080a] p-1 rounded-xl border border-white/10">
           <button
             type="button"
             onClick={() => setViewMode('cards')}
             className={`p-2 rounded-lg text-xs font-medium transition flex items-center gap-1.5 ${
               viewMode === 'cards'
-                ? 'bg-indigo-600 text-white shadow-sm'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-white text-black font-bold shadow-sm'
+                : 'text-neutral-400 hover:text-white'
             }`}
             title="Card Grid View"
           >
@@ -214,8 +214,8 @@ export const DepartmentList = () => {
             onClick={() => setViewMode('table')}
             className={`p-2 rounded-lg text-xs font-medium transition flex items-center gap-1.5 ${
               viewMode === 'table'
-                ? 'bg-indigo-600 text-white shadow-sm'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-white text-black font-bold shadow-sm'
+                : 'text-neutral-400 hover:text-white'
             }`}
             title="Matrix Table View"
           >
@@ -389,32 +389,32 @@ export const DepartmentList = () => {
         </div>
       )}
 
-      {/* 6. Precision Obsidian Slide-over Drawer */}
+      {/* 6. Slide-over Drawer */}
       {selectedDept && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/70 backdrop-blur-md animate-fadeIn">
-          <div className="w-full max-w-xl bg-[#080c16] h-full shadow-2xl flex flex-col border-l border-white/[0.1] text-slate-200 animate-slideInRight">
+        <div className="fixed inset-0 z-50 flex justify-end bg-black/75 backdrop-blur-md animate-fadeIn selection:bg-white selection:text-black">
+          <div className="w-full max-w-xl bg-[#08080a] h-full shadow-2xl flex flex-col border-l border-white/10 text-white animate-slideInRight">
             {/* Drawer Header */}
-            <div className="p-5 border-b border-white/[0.08] flex items-center justify-between bg-[#0b101c]">
+            <div className="p-5 border-b border-white/10 flex items-center justify-between bg-[#0c0c0e]">
               <div className="flex items-center gap-3.5">
-                <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+                <div className="h-10 w-10 rounded-xl bg-white text-black flex items-center justify-center shadow-md shadow-white/20">
                   <FiLayers size={18} />
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-white font-display">{selectedDept.name}</h3>
-                  <span className="text-xs text-slate-400 font-mono">Division Lead: {selectedDept.leadName}</span>
+                  <span className="text-xs text-neutral-400 font-mono">Division Lead: {selectedDept.leadName}</span>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setSelectedDept(null)}
-                className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition"
+                className="p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/[0.06] transition"
               >
                 <FiX size={18} />
               </button>
             </div>
 
             {/* Department Detail Tabs */}
-            <div className="flex border-b border-white/[0.08] px-5 bg-[#0b101c]/60 text-xs font-medium gap-1 overflow-x-auto">
+            <div className="flex border-b border-white/10 px-5 bg-[#08080a]/90 text-xs font-medium gap-1 overflow-x-auto">
               {[
                 { id: 'overview', label: 'Overview' },
                 { id: 'employees', label: 'Workforce' },
@@ -463,9 +463,9 @@ export const DepartmentList = () => {
                   </div>
 
                   {/* Gemini AI Department Summary */}
-                  <div className="p-4 rounded-xl bg-gradient-to-br from-indigo-500/10 via-cyan-500/10 to-transparent border border-indigo-500/30 space-y-3 relative overflow-hidden">
+                  <div className="p-4 rounded-xl bg-white/[0.03] border border-white/15 space-y-3 relative overflow-hidden">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 font-semibold text-cyan-400">
+                      <div className="flex items-center gap-2 font-semibold text-white">
                         <Sparkles size={16} />
                         <span className="font-display">Gemini AI Division Intelligence</span>
                       </div>
@@ -473,7 +473,7 @@ export const DepartmentList = () => {
                         type="button"
                         onClick={() => handleGenerateAISummary(selectedDept.name)}
                         disabled={aiLoading}
-                        className="text-[11px] font-mono uppercase tracking-wider text-white bg-indigo-600 hover:bg-indigo-500 px-3 py-1 rounded-lg border border-indigo-400/30 transition disabled:opacity-50"
+                        className="text-[11px] font-mono uppercase tracking-wider text-white bg-[#2563EB] hover:bg-[#1D4ED8] px-3 py-1 rounded-lg border border-[#2563EB]/40 transition disabled:opacity-50"
                       >
                         {aiLoading ? 'Synthesizing...' : 'Run Analysis'}
                       </button>
@@ -608,7 +608,7 @@ export const DepartmentList = () => {
                       <span className="font-bold text-cyan-400 font-mono">92.0%</span>
                     </div>
                     <div className="w-full bg-white/[0.06] h-2 rounded-full overflow-hidden">
-                      <div className="bg-gradient-to-r from-indigo-500 to-cyan-400 h-full rounded-full" style={{ width: '92%' }} />
+                      <div className="bg-white h-full rounded-full" style={{ width: '92%' }} />
                     </div>
                   </div>
 

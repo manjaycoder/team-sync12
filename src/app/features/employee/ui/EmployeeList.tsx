@@ -127,8 +127,8 @@ export const EmployeeList = () => {
         );
       case 'remote':
         return (
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
-            <span className="h-1.5 w-1.5 rounded-full bg-indigo-400" />
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#2563EB]/15 text-[#60A5FA] border border-[#2563EB]/35">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#2563EB]" />
             Remote
           </span>
         );
@@ -153,7 +153,7 @@ export const EmployeeList = () => {
             <h1 className="text-xl sm:text-2xl font-bold font-display text-white tracking-tight">
               Employee Directory
             </h1>
-            <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 font-semibold border border-indigo-500/30">
+            <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-[#2563EB]/15 text-[#60A5FA] font-semibold border border-[#2563EB]/35">
               {employees.length} Team Members
             </span>
           </div>
@@ -296,7 +296,7 @@ export const EmployeeList = () => {
                       <td className="py-3.5 px-4">{getStatusBadge(emp.status)}</td>
 
                       {/* Active Tasks */}
-                      <td className="py-3.5 px-4 font-mono font-bold text-indigo-400">
+                      <td className="py-3.5 px-4 font-mono font-bold text-[#60A5FA]">
                         {activeCount} active
                       </td>
 
@@ -327,7 +327,7 @@ export const EmployeeList = () => {
                               e.stopPropagation();
                               setSelectedEmp(emp);
                             }}
-                            className="text-xs font-mono text-indigo-400 hover:text-indigo-300 px-2.5 py-1 rounded-lg hover:bg-indigo-500/10 transition"
+                            className="text-xs font-mono text-[#60A5FA] hover:text-[#38BDF8] px-2.5 py-1 rounded-lg hover:bg-[#2563EB]/10 transition"
                           >
                             Profile
                           </button>
@@ -355,10 +355,10 @@ export const EmployeeList = () => {
 
       {/* 4. EMPLOYEE PROFILE DRAWER WITH TABS */}
       {selectedEmp && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm animate-fadeIn">
-          <div className="w-full max-w-xl bg-slate-900/95 h-full shadow-2xl flex flex-col border-l border-white/15 animate-slideInRight backdrop-blur-2xl">
+        <div className="fixed inset-0 z-50 flex justify-end bg-black/75 backdrop-blur-md animate-fadeIn selection:bg-white selection:text-black">
+          <div className="w-full max-w-xl bg-[#08080a] h-full shadow-2xl flex flex-col border-l border-white/10 text-white animate-slideInRight backdrop-blur-2xl">
             {/* Header */}
-            <div className="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between bg-slate-950/60">
+            <div className="p-4 sm:p-5 border-b border-white/10 flex items-center justify-between bg-[#0c0c0e]">
               <div className="flex items-center gap-3">
                 <img
                   src={selectedEmp.avatar}
@@ -367,10 +367,10 @@ export const EmployeeList = () => {
                 />
                 <div>
                   <h3 className="text-base font-bold text-white font-display">{selectedEmp.name}</h3>
-                  <div className="text-[11px] text-slate-400 flex items-center gap-2 font-mono">
+                  <div className="text-[11px] text-neutral-400 flex items-center gap-2 font-mono">
                     <span>{selectedEmp.role}</span>
                     <span>&bull;</span>
-                    <span className="text-cyan-400">{selectedEmp.department}</span>
+                    <span className="text-white">{selectedEmp.department}</span>
                   </div>
                 </div>
               </div>
@@ -397,7 +397,7 @@ export const EmployeeList = () => {
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`py-3 px-3.5 border-b-2 transition ${
                     activeTab === tab.id
-                      ? 'border-indigo-400 text-white font-semibold'
+                      ? 'border-[#2563EB] text-white font-semibold'
                       : 'border-transparent text-slate-400 hover:text-white'
                   }`}
                 >
@@ -434,17 +434,17 @@ export const EmployeeList = () => {
                   </div>
 
                   {/* Context AI Employee Workload Evaluator */}
-                  <div className="p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/25 space-y-2.5">
+                  <div className="p-4 rounded-2xl bg-[#2563EB]/10 border border-[#2563EB]/30 space-y-2.5">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 font-bold text-indigo-300 font-display">
-                        <Sparkles size={16} className="text-cyan-400" />
+                      <div className="flex items-center gap-2 font-bold text-[#60A5FA] font-display">
+                        <Sparkles size={16} className="text-[#38BDF8]" />
                         <span>AI Workload &amp; Capacity Evaluation</span>
                       </div>
                       <button
                         type="button"
                         onClick={() => handleAskAIAboutEmp(selectedEmp.name)}
                         disabled={aiLoading}
-                        className="text-[11px] font-mono font-semibold text-white bg-indigo-600 hover:bg-indigo-700 px-2.5 py-1 rounded-lg transition shadow-sm"
+                        className="text-[11px] font-mono font-semibold text-white bg-[#2563EB] hover:bg-[#1D4ED8] px-2.5 py-1 rounded-lg transition shadow-sm"
                       >
                         {aiLoading ? 'Analyzing...' : 'Ask AI'}
                       </button>
@@ -554,9 +554,9 @@ export const EmployeeList = () => {
                   <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10">
                     <div className="flex justify-between items-center mb-1">
                       <span className="font-semibold text-white">Task Velocity</span>
-                      <span className="font-mono font-bold text-indigo-400 text-sm">Optimal</span>
+                      <span className="font-mono font-bold text-white text-sm">Optimal</span>
                     </div>
-                    <p className="text-[11px] text-slate-400 mt-1 font-sans">
+                    <p className="text-[11px] text-neutral-400 mt-1 font-sans">
                       Consistent delivery pace with zero unresolved blockers.
                     </p>
                   </div>
@@ -565,7 +565,7 @@ export const EmployeeList = () => {
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-white/10 bg-slate-950/60 flex justify-end">
+            <div className="p-4 border-t border-white/10 bg-[#0c0c0e] flex justify-end">
               <button
                 type="button"
                 onClick={() => setSelectedEmp(null)}
@@ -580,8 +580,8 @@ export const EmployeeList = () => {
 
       {/* 5. Create Employee Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
-          <div className="bg-slate-900/95 border border-white/15 rounded-3xl w-full max-w-md shadow-2xl p-6 backdrop-blur-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-fadeIn selection:bg-white selection:text-black">
+          <div className="bg-[#08080a]/95 border border-white/15 rounded-3xl w-full max-w-md shadow-2xl p-6 backdrop-blur-2xl">
             <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-5">
               <h3 className="text-base font-bold text-white font-display">Add New Team Member</h3>
               <button

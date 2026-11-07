@@ -173,7 +173,7 @@ export const HeroSection = () => {
             <button
               ref={primaryBtnRef}
               type="button"
-              onClick={() => navigate('/register')}
+              onClick={() => navigate('/sign-up')}
               data-cursor="pointer"
               className="w-full sm:w-auto group relative inline-flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-indigo-500 via-indigo-600 to-cyan-500 px-8 py-4 text-sm font-bold text-white shadow-xl shadow-indigo-600/30 transition-all duration-300 hover:shadow-indigo-500/50 hover:scale-105"
             >

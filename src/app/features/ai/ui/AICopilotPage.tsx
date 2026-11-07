@@ -204,10 +204,10 @@ Connected to live organizational graph containing **${empCount} team members**, 
           <span className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.08] text-slate-300">
             {employees.length} Personnel
           </span>
-          <span className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.08] text-cyan-400">
+          <span className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.08] text-[#38BDF8]">
             {departments.length} Divisions
           </span>
-          <span className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.08] text-indigo-400">
+          <span className="px-2.5 py-1 rounded-lg bg-white/[0.04] border border-white/[0.08] text-[#60A5FA]">
             {tasks.length} Deliverables
           </span>
         </div>
@@ -216,14 +216,14 @@ Connected to live organizational graph containing **${empCount} team members**, 
       {/* 2. Standup Generator Utility Ribbon */}
       <div className="ts-card p-4 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 shrink-0">
+          <div className="h-10 w-10 rounded-xl bg-white text-black flex items-center justify-center shadow-md shadow-white/20 shrink-0">
             <Sparkles size={18} />
           </div>
           <div>
             <span className="text-sm font-semibold text-white block font-display">
               Agile Standup & Briefing Synthesizer
             </span>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-neutral-400">
               Autonomous daily agenda generator and cross-division synchronization engine.
             </p>
           </div>
@@ -236,7 +236,7 @@ Connected to live organizational graph containing **${empCount} team members**, 
             className="ts-input py-1.5 px-3 text-xs font-mono"
           >
             {departments.map((d) => (
-              <option key={d.id} value={d.name} className="bg-[#0b101c] text-white">
+              <option key={d.id} value={d.name} className="bg-[#09090b] text-white">
                 {d.name}
               </option>
             ))}
@@ -254,13 +254,13 @@ Connected to live organizational graph containing **${empCount} team members**, 
 
       {/* Standup Results Card if loaded */}
       {standupData && (
-        <div className="ts-card p-5 border-cyan-500/30 bg-gradient-to-br from-cyan-500/10 via-indigo-500/5 to-transparent space-y-4 text-xs animate-fadeIn">
+        <div className="ts-card p-5 border-white/20 bg-white/[0.03] space-y-4 text-xs animate-fadeIn">
           <div className="flex items-center justify-between pb-3 border-b border-white/[0.08]">
             <div className="flex items-center gap-2.5">
               <span className="font-semibold text-white text-sm font-display">
                 Sprint Standup: {standupData.department || selectedDept}
               </span>
-              <span className="ts-badge-info text-[10px] font-mono">
+              <span className="ts-badge-slate text-[10px] font-mono">
                 {standupData.date || 'Today'}
               </span>
             </div>
@@ -338,17 +338,17 @@ Connected to live organizational graph containing **${empCount} team members**, 
               className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}
             >
               <div className="flex items-center gap-2 mb-1.5 px-1 font-mono text-[10px]">
-                <span className={msg.sender === 'user' ? 'text-indigo-400 font-semibold' : 'text-cyan-400 font-semibold'}>
+                <span className="text-neutral-400 font-semibold">
                   {msg.sender === 'user' ? 'You' : 'Gemini 1.5 Copilot'}
                 </span>
-                <span className="text-slate-500">{msg.time}</span>
+                <span className="text-neutral-500">{msg.time}</span>
               </div>
 
               <div
                 className={`p-5 rounded-2xl max-w-[85%] leading-relaxed ${
                   msg.sender === 'user'
-                    ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-br-xs shadow-lg shadow-indigo-600/20'
-                    : 'bg-[#0b101c] border border-white/[0.08] text-slate-200 rounded-bl-xs shadow-xl'
+                    ? 'bg-white text-black font-medium rounded-br-xs shadow-lg shadow-white/10'
+                    : 'bg-[#08080a] border border-white/15 text-white rounded-bl-xs shadow-xl'
                 }`}
               >
                 <div className="whitespace-pre-wrap space-y-2.5">
@@ -362,7 +362,7 @@ Connected to live organizational graph containing **${empCount} team members**, 
                     }
                     if (line.startsWith('#### ')) {
                       return (
-                        <h5 key={idx} className="font-semibold text-xs text-cyan-300 mt-1 mb-1 font-display">
+                        <h5 key={idx} className="font-semibold text-xs text-white/90 mt-1 mb-1 font-display">
                           {line.replace('#### ', '')}
                         </h5>
                       );
@@ -370,7 +370,7 @@ Connected to live organizational graph containing **${empCount} team members**, 
                     if (line.startsWith('• ') || line.startsWith('- ')) {
                       return (
                         <div key={idx} className="flex items-start gap-2 pl-1 my-1">
-                          <span className="text-cyan-400 font-bold">•</span>
+                          <span className="text-white font-bold">•</span>
                           <span>{line.replace(/^[•-]\s*/, '')}</span>
                         </div>
                       );
@@ -380,7 +380,7 @@ Connected to live organizational graph containing **${empCount} team members**, 
                 </div>
 
                 {msg.sender === 'gemini' && (
-                  <div className="mt-4 pt-3 border-t border-white/[0.08] flex items-center justify-between text-[11px] text-slate-400">
+                  <div className="mt-4 pt-3 border-t border-white/[0.08] flex items-center justify-between text-[11px] text-neutral-400">
                     <span className="flex items-center gap-1.5 text-emerald-400 font-mono text-[10px]">
                       <FiCheckCircle size={12} />
                       Live Verified Telemetry
@@ -388,7 +388,7 @@ Connected to live organizational graph containing **${empCount} team members**, 
                     <button
                       type="button"
                       onClick={() => handleCopyText(msg.text, msg.id)}
-                      className="hover:text-cyan-300 transition flex items-center gap-1.5 font-mono text-[11px] text-slate-400 hover:bg-white/[0.04] px-2 py-0.5 rounded"
+                      className="hover:text-white transition flex items-center gap-1.5 font-mono text-[11px] text-neutral-400 hover:bg-white/[0.04] px-2 py-0.5 rounded"
                     >
                       {copiedId === msg.id ? (
                         <>
@@ -407,8 +407,8 @@ Connected to live organizational graph containing **${empCount} team members**, 
           ))}
 
           {loading && (
-            <div className="flex items-center gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/[0.08] text-slate-300 text-xs w-fit animate-pulse">
-              <Sparkles className="text-cyan-400 animate-spin" size={16} />
+            <div className="flex items-center gap-3 p-4 rounded-xl bg-white/[0.03] border border-white/[0.08] text-neutral-300 text-xs w-fit animate-pulse">
+              <Sparkles className="text-white animate-spin" size={16} />
               <span className="font-mono">Synthesizing live knowledge graph telemetry...</span>
             </div>
           )}
@@ -417,7 +417,7 @@ Connected to live organizational graph containing **${empCount} team members**, 
         </div>
 
         {/* Bottom Input Form */}
-        <div className="p-4 border-t border-white/[0.08] bg-[#0b101c]">
+        <div className="p-4 border-t border-white/10 bg-[#08080a]">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -436,13 +436,13 @@ Connected to live organizational graph containing **${empCount} team members**, 
             <button
               type="submit"
               disabled={loading || !question.trim()}
-              className="p-3 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 text-white hover:opacity-95 disabled:opacity-40 disabled:cursor-not-allowed transition shrink-0 shadow-lg shadow-indigo-500/20"
+              className="p-3 rounded-xl bg-white text-black hover:bg-neutral-200 disabled:opacity-40 disabled:cursor-not-allowed transition shrink-0 shadow-lg shadow-white/10"
               title="Send Inquiry"
             >
               <FiSend size={15} />
             </button>
           </form>
-          <div className="flex items-center justify-between text-[10px] text-slate-500 mt-2.5 px-1 font-mono">
+          <div className="flex items-center justify-between text-[10px] text-neutral-500 mt-2.5 px-1 font-mono">
             <span>Powered by Google Gemini 1.5 Flash</span>
             <span className="flex items-center gap-1 text-slate-400">
               Press <FiCornerDownLeft size={10} /> to send

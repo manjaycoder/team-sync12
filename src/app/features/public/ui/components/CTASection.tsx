@@ -80,7 +80,7 @@ export const CTASection = () => {
               <button
                 ref={registerBtnRef}
                 type="button"
-                onClick={() => navigate('/register')}
+                onClick={() => navigate('/sign-up')}
                 data-cursor="pointer"
                 className="w-full sm:w-auto group inline-flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-indigo-500 via-indigo-600 to-cyan-500 px-9 py-4 text-sm font-bold text-white shadow-xl shadow-indigo-600/30 transition-all duration-300 hover:scale-105 hover:shadow-indigo-500/50"
               >
@@ -91,7 +91,7 @@ export const CTASection = () => {
               <button
                 ref={signinBtnRef}
                 type="button"
-                onClick={() => navigate('/login')}
+                onClick={() => navigate('/sign-in')}
                 data-cursor="pointer"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/5 px-8 py-4 text-sm font-semibold text-white hover:bg-white/10 hover:border-white/30 transition-all backdrop-blur-md"
               >

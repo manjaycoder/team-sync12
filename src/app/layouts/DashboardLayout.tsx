@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useAuth } from '../features/auth/hooks/useAuth';
+import { useUser, useClerk, UserButton } from '@clerk/clerk-react';
 import type { RootState, AppDispatch } from '../routes/store';
 import { createTaskApi } from '../features/projects/state/taskSlice';
 import { createEmployeeApi } from '../features/employee/state/employeeSlice';
@@ -31,10 +31,23 @@ import {
 import { Sparkles, Bot } from 'lucide-react';
 
 export const DashboardLayout = () => {
-  const { employee, handleLogout } = useAuth();
+  const { user } = useUser();
+  const { signOut } = useClerk();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Map Clerk user to the shape the rest of the layout expects
+  const employee = user
+    ? {
+        name: user.fullName || user.username || user.primaryEmailAddress?.emailAddress || 'User',
+        email: user.primaryEmailAddress?.emailAddress || '',
+        role: (user.publicMetadata?.role as string) || 'Team Member',
+        avatar: user.imageUrl || '',
+      }
+    : null;
+
+  const handleLogout = () => signOut(() => navigate('/'));
 
   const { employees } = useSelector((state: RootState) => state.employee);
   const { departments } = useSelector((state: RootState) => state.department);
@@ -50,7 +63,6 @@ export const DashboardLayout = () => {
   const [quickCreateType, setQuickCreateType] = useState<'task' | 'employee' | 'department' | null>(null);
   const [isCompanyModalOpen, setIsCompanyModalOpen] = useState(false);
   const [isReportsModalOpen, setIsReportsModalOpen] = useState(false);
-  const [showUserDropdown, setShowUserDropdown] = useState(false);
 
   // Quick Create Forms state
   const [quickTaskForm, setQuickTaskForm] = useState({
@@ -88,7 +100,6 @@ export const DashboardLayout = () => {
         setIsCommandMenuOpen(false);
         setIsQuickCreateOpen(false);
         setQuickCreateType(null);
-        setShowUserDropdown(false);
         setShowNotifications(false);
       }
     };
@@ -242,18 +253,25 @@ export const DashboardLayout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#070a12] text-white flex flex-col md:flex-row font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
+    <div className="min-h-screen bg-black text-white flex flex-col md:flex-row font-sans selection:bg-white selection:text-black relative">
+      {/* Editorial ambient background grid and lighting matching landing page */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[700px] w-[900px] rounded-full bg-white/[0.03] blur-[150px]" />
+        <div className="absolute inset-0 bg-grid-white opacity-25" />
+        <div className="absolute inset-0 noise-overlay" />
+      </div>
+
       {/* Mobile Top Header */}
-      <div className="md:hidden flex items-center justify-between px-4 py-3 bg-slate-950/90 border-b border-white/10 sticky top-0 z-50 backdrop-blur-xl">
+      <div className="md:hidden flex items-center justify-between px-4 py-3 bg-black/90 border-b border-white/10 sticky top-0 z-50 backdrop-blur-xl">
         <div className="flex items-center gap-2.5">
-          <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center text-white font-display font-bold text-xs shadow-md">
+          <div className="h-8 w-8 rounded-xl bg-white text-black flex items-center justify-center font-display font-black text-xs shadow-md shadow-white/20">
             TS
           </div>
           <div>
             <span className="font-display font-bold text-white text-sm block leading-none">
               Team-Sync
             </span>
-            <span className="text-[10px] font-mono text-indigo-400">ENTERPRISE PRO</span>
+            <span className="text-[10px] font-mono text-neutral-400">ENTERPRISE PRO</span>
           </div>
         </div>
 
@@ -261,7 +279,7 @@ export const DashboardLayout = () => {
           <button
             type="button"
             onClick={() => setIsAIDrawerOpen(true)}
-            className="p-2 rounded-xl bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 hover:bg-indigo-500/25 transition"
+            className="p-2 rounded-xl bg-white/10 text-white border border-white/20 hover:bg-white/20 transition"
             aria-label="Open AI Assistant"
           >
             <Sparkles size={16} />
@@ -269,7 +287,7 @@ export const DashboardLayout = () => {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-xl bg-white/5 text-slate-300 hover:text-white border border-white/10 transition"
+            className="p-2 rounded-xl bg-white/5 text-neutral-300 hover:text-white border border-white/10 transition"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <FiX size={18} /> : <FiMenu size={18} />}
@@ -277,9 +295,9 @@ export const DashboardLayout = () => {
         </div>
       </div>
 
-      {/* Modern Obsidian Sidebar */}
+      {/* Monochromatic Enterprise Sidebar */}
       <aside
-        className={`fixed md:sticky top-0 left-0 h-screen w-64 bg-slate-950/90 border-r border-white/10 flex flex-col z-40 transition-transform duration-300 backdrop-blur-2xl ${
+        className={`fixed md:sticky top-0 left-0 h-screen w-64 bg-[#08080a]/95 border-r border-white/10 flex flex-col z-40 transition-transform duration-300 backdrop-blur-2xl ${
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
       >
@@ -291,16 +309,16 @@ export const DashboardLayout = () => {
             className="flex items-center gap-3 text-left w-full p-2 rounded-xl hover:bg-white/5 transition group border border-transparent hover:border-white/10"
             title="Switch or view company details"
           >
-            <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-cyan-500 flex items-center justify-center text-white font-display font-bold text-xs shadow-md shadow-indigo-600/30 shrink-0">
+            <div className="h-8 w-8 rounded-xl bg-white text-black flex items-center justify-center font-display font-black text-xs shadow-md shadow-white/20 shrink-0">
               TS
             </div>
             <div className="truncate flex-1">
               <div className="text-xs font-bold text-white flex items-center gap-1.5 leading-tight">
                 <span>Acme Corp</span>
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <FiChevronDown size={12} className="text-slate-400 group-hover:text-slate-200 transition ml-auto" />
+                <FiChevronDown size={12} className="text-neutral-400 group-hover:text-white transition ml-auto" />
               </div>
-              <span className="text-[10px] font-mono text-slate-400">Enterprise Workspace</span>
+              <span className="text-[10px] font-mono text-neutral-400">Enterprise Workspace</span>
             </div>
           </button>
         </div>
@@ -356,7 +374,7 @@ export const DashboardLayout = () => {
                 className={({ isActive }) =>
                   `flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-all ${
                     isActive
-                      ? 'bg-gradient-to-r from-indigo-500/20 via-indigo-500/10 to-transparent text-white font-semibold border-l-2 border-indigo-400 shadow-sm'
+                      ? 'bg-gradient-to-r from-[#2563EB]/25 via-[#2563EB]/10 to-transparent text-white font-semibold border-l-2 border-[#2563EB] shadow-sm'
                       : 'text-slate-400 hover:text-white hover:bg-white/5'
                   }`
                 }
@@ -364,13 +382,13 @@ export const DashboardLayout = () => {
                 <div className="flex items-center gap-2.5">
                   <Icon
                     size={16}
-                    className="shrink-0 text-slate-400 group-hover:text-indigo-400 transition"
+                    className="shrink-0 text-slate-400 group-hover:text-[#38BDF8] transition"
                   />
                   <span>{item.label}</span>
                 </div>
 
                 {item.badge && (
-                  <span className="text-[9px] font-mono font-semibold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                  <span className="text-[9px] font-mono font-semibold px-2 py-0.5 rounded-full bg-[#2563EB]/20 text-[#38BDF8] border border-[#2563EB]/30">
                     {item.badge}
                   </span>
                 )}
@@ -380,108 +398,64 @@ export const DashboardLayout = () => {
         </nav>
 
         {/* Context AI Callout Box */}
-        <div className="p-3 mx-3 mb-3 rounded-2xl bg-gradient-to-br from-indigo-950/40 via-slate-900/60 to-slate-950/80 border border-indigo-500/30">
+        <div className="p-3 mx-3 mb-3 rounded-2xl bg-[#08080a] border border-white/15 shadow-md shadow-black/80">
           <div className="flex items-center justify-between text-xs font-semibold text-white mb-1.5">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+              <Sparkles className="w-3.5 h-3.5 text-white animate-pulse" />
               <span className="font-display font-bold">Gemini Copilot</span>
             </div>
             <span className="text-[9px] font-mono font-medium text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
               Active
             </span>
           </div>
-          <p className="text-[11px] text-slate-400 mb-2.5 leading-relaxed font-sans">
+          <p className="text-[11px] text-neutral-400 mb-2.5 leading-relaxed font-sans">
             Real-time context on sprint velocity, teams, and deliverables.
           </p>
           <button
             type="button"
             onClick={() => setIsAIDrawerOpen(true)}
-            className="w-full py-1.5 text-center text-xs font-semibold text-white bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 rounded-xl transition shadow-sm"
+            className="w-full py-1.5 text-center text-xs font-bold text-black bg-white hover:bg-neutral-200 rounded-xl transition shadow-sm font-mono uppercase tracking-wider text-[11px]"
           >
             Ask Workspace AI
           </button>
         </div>
 
-        {/* User Profile Card */}
-        <div className="p-3 border-t border-white/10 relative">
-          <div className="flex items-center justify-between gap-2">
-            <div
-              className="flex items-center gap-2.5 overflow-hidden cursor-pointer flex-1 group p-1 rounded-xl hover:bg-white/5 transition"
-              onClick={() => setShowUserDropdown(!showUserDropdown)}
-            >
-              <img
-                src={
-                  employee?.avatar ||
-                  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80'
-                }
-                alt={employee?.name || 'User'}
-                className="h-8 w-8 rounded-xl object-cover ring-1 ring-indigo-500/40 shrink-0"
-              />
-              <div className="truncate">
-                <div className="text-xs font-semibold text-white group-hover:text-indigo-400 transition truncate">
-                  {employee?.name || 'Alex Morgan'}
-                </div>
-                <div className="text-[10px] font-mono text-slate-400 truncate">
-                  {employee?.role || 'Lead Admin'}
-                </div>
+        {/* User Profile Card — powered by Clerk UserButton */}
+        <div className="p-3 border-t border-white/10">
+          <div className="flex items-center gap-2.5 px-1 py-1 rounded-xl hover:bg-white/[0.04] transition group">
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: 'h-8 w-8 ring-2 ring-white/30 rounded-xl',
+                  userButtonPopoverCard:
+                    'bg-[#08080a] border border-white/15 shadow-2xl backdrop-blur-xl',
+                  userButtonPopoverActionButton:
+                    'text-neutral-200 hover:bg-white/[0.08] hover:text-white',
+                  userButtonPopoverActionButtonText: 'text-neutral-200',
+                  userPreviewMainIdentifier: 'text-white font-semibold',
+                  userPreviewSecondaryIdentifier: 'text-neutral-400',
+                },
+              }}
+              afterSignOutUrl="/"
+              userProfileMode="modal"
+            />
+            <div className="truncate flex-1">
+              <div className="text-xs font-semibold text-white group-hover:text-[#60A5FA] transition truncate">
+                {employee?.name || 'Team Member'}
+              </div>
+              <div className="text-[10px] font-mono text-slate-400 truncate">
+                {employee?.email || ''}
               </div>
             </div>
-
             <button
               type="button"
               onClick={handleLogout}
-              className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition"
+              className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition shrink-0"
               title="Sign Out"
             >
-              <FiLogOut size={15} />
+              <FiLogOut size={14} />
             </button>
           </div>
-
-          {/* User Profile Dropdown Menu */}
-          {showUserDropdown && (
-            <div className="absolute bottom-16 left-3 right-3 bg-slate-900/95 border border-white/15 rounded-2xl shadow-2xl p-2 z-50 text-xs backdrop-blur-2xl animate-fadeIn">
-              <div className="px-2.5 py-2 border-b border-white/10">
-                <div className="font-semibold text-white">{employee?.name || 'Alex Morgan'}</div>
-                <div className="text-[11px] font-mono text-slate-400 truncate">
-                  {employee?.email || 'alex@acme.space'}
-                </div>
-              </div>
-              <div className="py-1">
-                <button
-                  type="button"
-                  onClick={() => {
-                    navigate('/home/settings');
-                    setShowUserDropdown(false);
-                  }}
-                  className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/5 text-slate-300 hover:text-white flex items-center gap-2"
-                >
-                  <FiSettings size={13} className="text-slate-400" />
-                  <span>Account &amp; Settings</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsCompanyModalOpen(true);
-                    setShowUserDropdown(false);
-                  }}
-                  className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-white/5 text-slate-300 hover:text-white flex items-center gap-2"
-                >
-                  <FiBriefcase size={13} className="text-slate-400" />
-                  <span>Company Profile</span>
-                </button>
-              </div>
-              <div className="pt-1 border-t border-white/10">
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-rose-500/10 text-rose-400 flex items-center gap-2"
-                >
-                  <FiLogOut size={13} />
-                  <span>Sign out</span>
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       </aside>
 
@@ -514,7 +488,7 @@ export const DashboardLayout = () => {
               <button
                 type="button"
                 onClick={() => setIsQuickCreateOpen(!isQuickCreateOpen)}
-                className="group inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 px-3.5 py-1.5 text-xs font-semibold text-white shadow-md shadow-indigo-600/30 transition hover:scale-105"
+                className="group inline-flex items-center gap-1.5 rounded-xl bg-white text-black px-3.5 py-1.5 text-xs font-bold shadow-md shadow-white/20 transition hover:bg-neutral-200 active:scale-95"
               >
                 <FiPlus size={14} />
                 <span>New</span>
@@ -522,16 +496,16 @@ export const DashboardLayout = () => {
               </button>
 
               {isQuickCreateOpen && (
-                <div className="absolute right-0 mt-2 w-52 rounded-2xl bg-slate-900/95 border border-white/15 shadow-2xl p-2 z-50 text-xs backdrop-blur-2xl animate-fadeIn">
+                <div className="absolute right-0 mt-2 w-52 rounded-2xl bg-[#08080a]/95 border border-white/15 shadow-2xl p-2 z-50 text-xs backdrop-blur-2xl animate-fadeIn">
                   <button
                     type="button"
                     onClick={() => {
                       setQuickCreateType('task');
                       setIsQuickCreateOpen(false);
                     }}
-                    className="w-full text-left px-3 py-2 rounded-xl hover:bg-white/5 text-slate-200 hover:text-white flex items-center gap-2.5 font-medium transition"
+                    className="w-full text-left px-3 py-2 rounded-xl hover:bg-white/10 text-neutral-200 hover:text-white flex items-center gap-2.5 font-medium transition"
                   >
-                    <FiCheckSquare className="text-indigo-400" />
+                    <FiCheckSquare className="text-white" />
                     <span>Create Deliverable Task</span>
                   </button>
                   <button
@@ -540,9 +514,9 @@ export const DashboardLayout = () => {
                       setQuickCreateType('employee');
                       setIsQuickCreateOpen(false);
                     }}
-                    className="w-full text-left px-3 py-2 rounded-xl hover:bg-white/5 text-slate-200 hover:text-white flex items-center gap-2.5 font-medium transition"
+                    className="w-full text-left px-3 py-2 rounded-xl hover:bg-white/10 text-neutral-200 hover:text-white flex items-center gap-2.5 font-medium transition"
                   >
-                    <FiUsers className="text-emerald-400" />
+                    <FiUsers className="text-white" />
                     <span>Add Team Member</span>
                   </button>
                   <button
@@ -551,9 +525,9 @@ export const DashboardLayout = () => {
                       setQuickCreateType('department');
                       setIsQuickCreateOpen(false);
                     }}
-                    className="w-full text-left px-3 py-2 rounded-xl hover:bg-white/5 text-slate-200 hover:text-white flex items-center gap-2.5 font-medium transition"
+                    className="w-full text-left px-3 py-2 rounded-xl hover:bg-white/10 text-neutral-200 hover:text-white flex items-center gap-2.5 font-medium transition"
                   >
-                    <FiLayers className="text-cyan-400" />
+                    <FiLayers className="text-white" />
                     <span>New Department</span>
                   </button>
                 </div>
@@ -564,10 +538,10 @@ export const DashboardLayout = () => {
             <button
               type="button"
               onClick={() => setIsAIDrawerOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-500/15 hover:bg-indigo-500/25 border border-indigo-500/30 text-indigo-300 text-xs font-semibold transition cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-semibold transition cursor-pointer"
               title="Open Context-Aware AI Copilot"
             >
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+              <Sparkles className="w-3.5 h-3.5 text-white" />
               <span className="hidden sm:inline">Ask AI</span>
             </button>
 
@@ -576,15 +550,15 @@ export const DashboardLayout = () => {
               <button
                 type="button"
                 onClick={() => setShowNotifications(!showNotifications)}
-                className="p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-slate-300 hover:text-white transition relative"
+                className="p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-neutral-300 hover:text-white transition relative"
                 aria-label="Notifications"
               >
                 <FiBell size={15} />
-                <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-indigo-500 ring-2 ring-[#070a12]" />
+                <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-white ring-2 ring-black" />
               </button>
 
               {showNotifications && (
-                <div className="absolute right-0 mt-2 w-80 rounded-2xl bg-slate-900/95 border border-white/15 shadow-2xl p-4 z-50 backdrop-blur-2xl animate-fadeIn">
+                <div className="absolute right-0 mt-2 w-80 rounded-2xl bg-[#08080a]/95 border border-white/15 shadow-2xl p-4 z-50 backdrop-blur-2xl animate-fadeIn">
                   <div className="flex items-center justify-between pb-3 border-b border-white/10">
                     <span className="text-xs font-bold text-white font-display">Notifications</span>
                     <button
@@ -671,7 +645,7 @@ export const DashboardLayout = () => {
                       className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left hover:bg-white/5 transition group"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-white/5 text-slate-300 group-hover:bg-indigo-500/20 group-hover:text-indigo-400 transition">
+                        <div className="p-2 rounded-lg bg-white/5 text-slate-300 group-hover:bg-[#2563EB]/20 group-hover:text-[#60A5FA] transition">
                           <Icon size={15} />
                         </div>
                         <div>
@@ -679,7 +653,7 @@ export const DashboardLayout = () => {
                           <div className="text-[11px] text-slate-400 font-sans">{cmd.desc}</div>
                         </div>
                       </div>
-                      <FiArrowRight size={13} className="text-slate-500 group-hover:text-indigo-400 transition" />
+                      <FiArrowRight size={13} className="text-slate-500 group-hover:text-[#60A5FA] transition" />
                     </button>
                   );
                 })
@@ -688,7 +662,7 @@ export const DashboardLayout = () => {
 
             <div className="p-3 bg-black/40 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-slate-400 px-4">
               <span className="flex items-center gap-1.5">
-                <Bot size={13} className="text-indigo-400" />
+                <Bot size={13} className="text-[#60A5FA]" />
                 <span>Team-Sync Command Center</span>
               </span>
               <span>Press ESC to dismiss</span>
@@ -922,16 +896,16 @@ export const DashboardLayout = () => {
 
       {/* COMPANY MANAGEMENT MODAL */}
       {isCompanyModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
-          <div className="bg-slate-900/95 border border-white/15 rounded-3xl w-full max-w-xl shadow-2xl p-6 sm:p-8 backdrop-blur-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-fadeIn">
+          <div className="bg-[#08080a]/95 border border-white/15 rounded-3xl w-full max-w-xl shadow-2xl p-6 sm:p-8 backdrop-blur-2xl">
             <div className="flex items-start justify-between pb-4 border-b border-white/10">
               <div className="flex items-center gap-3">
-                <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center text-white font-display font-extrabold text-base shadow-lg shadow-indigo-600/30">
+                <div className="h-12 w-12 rounded-2xl bg-white text-black flex items-center justify-center font-display font-black text-base shadow-lg shadow-white/20">
                   AC
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white font-display">Acme Technologies Inc.</h3>
-                  <span className="text-xs font-mono text-slate-400">
+                  <span className="text-xs font-mono text-neutral-400">
                     Enterprise Cloud &amp; AI SaaS &bull; ID: ACME-SYNC-2026
                   </span>
                 </div>
@@ -939,7 +913,7 @@ export const DashboardLayout = () => {
               <button
                 type="button"
                 onClick={() => setIsCompanyModalOpen(false)}
-                className="text-slate-400 hover:text-white p-1"
+                className="text-neutral-400 hover:text-white p-1"
               >
                 <FiX size={20} />
               </button>
@@ -947,15 +921,15 @@ export const DashboardLayout = () => {
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 my-5">
               <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10">
-                <div className="text-[10px] font-mono text-slate-400 uppercase">Employees</div>
+                <div className="text-[10px] font-mono text-neutral-400 uppercase">Employees</div>
                 <div className="text-2xl font-display font-bold text-white mt-1">{employees.length}</div>
               </div>
               <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10">
-                <div className="text-[10px] font-mono text-slate-400 uppercase">Departments</div>
+                <div className="text-[10px] font-mono text-neutral-400 uppercase">Departments</div>
                 <div className="text-2xl font-display font-bold text-white mt-1">{departments.length}</div>
               </div>
               <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10">
-                <div className="text-[10px] font-mono text-slate-400 uppercase">Active Tasks</div>
+                <div className="text-[10px] font-mono text-neutral-400 uppercase">Active Tasks</div>
                 <div className="text-2xl font-display font-bold text-white mt-1">{tasks.length}</div>
               </div>
               <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
@@ -966,10 +940,10 @@ export const DashboardLayout = () => {
               </div>
             </div>
 
-            <div className="space-y-3 text-xs text-slate-300 font-sans">
+            <div className="space-y-3 text-xs text-neutral-300 font-sans">
               <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/10 space-y-1.5">
                 <div className="font-semibold text-white">Company Overview</div>
-                <p className="text-slate-400 leading-relaxed">
+                <p className="text-neutral-400 leading-relaxed">
                   Acme Technologies is an autonomous cloud enterprise with integrated Gemini AI
                   workforce copilot. Cross-department tasks, sprints, and velocity metrics are
                   synchronized across all business units.
@@ -978,7 +952,7 @@ export const DashboardLayout = () => {
             </div>
 
             <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
-              <span className="text-xs font-mono text-slate-400">
+              <span className="text-xs font-mono text-neutral-400">
                 Tier: Enterprise Ultimate (Unlimited Users)
               </span>
               <button
@@ -995,18 +969,18 @@ export const DashboardLayout = () => {
 
       {/* EXECUTIVE REPORTS MODAL */}
       {isReportsModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
-          <div className="bg-slate-900/95 border border-white/15 rounded-3xl w-full max-w-lg shadow-2xl p-6 sm:p-8 backdrop-blur-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-fadeIn">
+          <div className="bg-[#08080a]/95 border border-white/15 rounded-3xl w-full max-w-lg shadow-2xl p-6 sm:p-8 backdrop-blur-2xl">
             <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-5">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+                <div className="p-2 rounded-xl bg-white/10 text-white border border-white/20">
                   <FiBarChart2 size={18} />
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-white font-display">
                     Organizational Reports &amp; Analytics
                   </h3>
-                  <span className="text-[11px] font-mono text-slate-400">
+                  <span className="text-[11px] font-mono text-neutral-400">
                     Real-time organizational telemetry
                   </span>
                 </div>
@@ -1014,7 +988,7 @@ export const DashboardLayout = () => {
               <button
                 type="button"
                 onClick={() => setIsReportsModalOpen(false)}
-                className="text-slate-400 hover:text-white p-1"
+                className="text-neutral-400 hover:text-white p-1"
               >
                 <FiX size={18} />
               </button>
@@ -1024,15 +998,15 @@ export const DashboardLayout = () => {
               <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10">
                 <div className="flex justify-between items-center mb-2">
                   <span className="font-semibold text-white">Sprint Delivery Velocity</span>
-                  <span className="font-mono font-bold text-indigo-400 text-sm">96%</span>
+                  <span className="font-mono font-bold text-white text-sm">96%</span>
                 </div>
                 <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
                   <div
-                    className="bg-gradient-to-r from-indigo-500 to-cyan-400 h-full rounded-full"
+                    className="bg-white h-full rounded-full"
                     style={{ width: '96%' }}
                   />
                 </div>
-                <span className="text-[10px] font-mono text-slate-400 mt-2 block">
+                <span className="text-[10px] font-mono text-neutral-400 mt-2 block">
                   Optimal velocity across {departments.length} active departments.
                 </span>
               </div>

@@ -55,61 +55,59 @@ export const Register: React.FC = () => {
   }, [clearAuthError]);
 
   return (
-    <div className="min-h-screen flex bg-[#070a12] text-white relative overflow-hidden select-none">
+    <div className="min-h-screen flex bg-black text-white relative overflow-hidden select-none">
       {/* Ambient background glows */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 h-[600px] w-[600px] rounded-full bg-gradient-to-tr from-indigo-600/15 via-violet-600/10 to-cyan-500/15 blur-[140px]" />
-        <div className="absolute bottom-10 right-10 h-96 w-96 rounded-full bg-cyan-500/10 blur-[120px]" />
-        <div className="absolute inset-0 bg-grid-white opacity-20" />
+        <div className="absolute top-1/4 left-1/4 h-[600px] w-[600px] rounded-full bg-white/[0.04] blur-[140px]" />
+        <div className="absolute inset-0 bg-grid-white opacity-35" />
         <div className="absolute inset-0 noise-overlay" />
       </div>
 
       {/* Left Feature Showcase Banner (Desktop) */}
-      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 lg:p-16 border-r border-white/10 relative z-10 bg-slate-950/40 backdrop-blur-xl">
+      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12 lg:p-16 border-r border-white/10 relative z-10 bg-black/60 backdrop-blur-xl">
         <div>
           {/* Brand Mark */}
           <div className="flex items-center gap-3 mb-16">
-            <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-cyan-500 text-white font-display font-extrabold text-base shadow-lg shadow-indigo-500/30">
+            <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-black font-display font-black text-base shadow-lg shadow-white/20">
               TS
-              <div className="absolute -inset-1 rounded-2xl bg-indigo-500/30 blur-sm -z-10" />
             </div>
             <div>
               <span className="text-xl font-display font-bold tracking-tight text-white block">
                 Team-Sync
               </span>
-              <span className="text-[11px] font-mono text-indigo-400">ENTERPRISE CLOUD</span>
+              <span className="text-[11px] font-mono uppercase text-neutral-400">Enterprise Cloud</span>
             </div>
           </div>
 
           <div className="max-w-md">
-            <div className="inline-flex items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-xs font-mono text-indigo-300 mb-6">
-              <span className="h-1.5 w-1.5 rounded-full bg-indigo-400 animate-pulse" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-mono text-neutral-300 mb-6">
+              <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
               <span>THE INTELLIGENCE OPERATING SYSTEM</span>
             </div>
 
             <h2 className="text-3xl lg:text-4xl font-display font-black tracking-tight leading-tight mb-4 text-white">
               Unify teams, roadmaps, and delivery in one shared workspace.
             </h2>
-            <p className="text-slate-400 text-sm font-sans leading-relaxed mb-10">
+            <p className="text-neutral-400 text-sm font-sans leading-relaxed mb-10">
               Real-time synchronization for engineering, product, and cross-functional teams powered
               by Google Gemini AI.
             </p>
 
             <div className="space-y-5 text-sm font-sans">
-              <div className="flex items-start gap-3.5 text-slate-300">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+              <div className="flex items-start gap-3.5 text-neutral-300">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-white/10 text-white border border-white/20">
                   <FiCheckCircle size={14} />
                 </span>
                 <span>Automated department capacity tracking &amp; cross-team Kanban sync</span>
               </div>
-              <div className="flex items-start gap-3.5 text-slate-300">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
+              <div className="flex items-start gap-3.5 text-neutral-300">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-white/10 text-white border border-white/20">
                   <FiActivity size={14} />
                 </span>
                 <span>Interactive employee directory, workloads, and real-time velocity metrics</span>
               </div>
-              <div className="flex items-start gap-3.5 text-slate-300">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-violet-500/20 text-violet-400 border border-violet-500/30">
+              <div className="flex items-start gap-3.5 text-neutral-300">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-white/10 text-white border border-white/20">
                   <FiCpu size={14} />
                 </span>
                 <span>Context-aware Gemini AI copilot for immediate organizational answers</span>
@@ -277,18 +275,18 @@ export const Register: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="group relative w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-500 via-indigo-600 to-cyan-500 py-3.5 text-sm font-bold text-white shadow-xl shadow-indigo-600/30 transition-all duration-300 hover:shadow-indigo-500/50 hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100 mt-4"
+                className="group relative w-full flex items-center justify-center gap-2 rounded-2xl bg-white text-black py-3.5 text-sm font-bold shadow-xl shadow-white/20 transition-all duration-300 hover:bg-neutral-200 active:scale-[0.98] disabled:opacity-50 mt-4"
               >
                 <span>{isLoading ? 'Creating account...' : 'Complete Registration'}</span>
                 <FiArrowRight className="transition-transform group-hover:translate-x-1" />
               </button>
 
-              <div className="text-center text-xs text-slate-400 pt-5 border-t border-white/10 mt-6 font-sans">
+              <div className="text-center text-xs text-neutral-400 pt-5 border-t border-white/10 mt-6 font-sans">
                 Already have an account?{' '}
                 <button
                   type="button"
                   onClick={() => navigate('/login')}
-                  className="text-indigo-400 hover:text-indigo-300 font-semibold ml-1 transition-colors"
+                  className="text-white hover:underline font-semibold ml-1 transition-colors"
                 >
                   Sign In
                 </button>

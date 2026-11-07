@@ -166,29 +166,29 @@ export const ContextAIDrawer: React.FC<ContextAIDrawerProps> = ({ isOpen, onClos
   const PageIcon = pageContext.icon;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/75 backdrop-blur-md transition-opacity duration-200">
-      <div className="w-full max-w-lg bg-[#080c16] h-full shadow-2xl flex flex-col border-l border-white/[0.1] text-slate-200 animate-slideInRight">
+    <div className="fixed inset-0 z-50 flex justify-end bg-black/75 backdrop-blur-md transition-opacity duration-200 selection:bg-white selection:text-black">
+      <div className="w-full max-w-lg bg-[#08080a] h-full shadow-2xl flex flex-col border-l border-white/10 text-white animate-slideInRight">
         {/* Header */}
-        <div className="p-5 border-b border-white/[0.08] flex items-center justify-between bg-[#0b101c]">
+        <div className="p-5 border-b border-white/10 flex items-center justify-between bg-[#0c0c0e]">
           <div className="flex items-center gap-3.5">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+            <div className="h-10 w-10 rounded-xl bg-white text-black flex items-center justify-center shadow-md shadow-white/20">
               <Sparkles size={18} />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-sm font-bold text-white font-display">Context Copilot</span>
-                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono text-cyan-400 bg-cyan-500/10 border border-cyan-500/20">
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono text-white bg-white/10 border border-white/20">
                   <PageIcon size={10} />
                   {pageContext.name}
                 </span>
               </div>
-              <p className="text-xs text-slate-400 truncate max-w-xs mt-0.5">{pageContext.description}</p>
+              <p className="text-xs text-neutral-400 truncate max-w-xs mt-0.5">{pageContext.description}</p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition"
+            className="p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/[0.06] transition"
             aria-label="Close drawer"
           >
             <FiX size={18} />
@@ -196,8 +196,8 @@ export const ContextAIDrawer: React.FC<ContextAIDrawerProps> = ({ isOpen, onClos
         </div>
 
         {/* Suggested Context Chips */}
-        <div className="px-5 py-3 bg-[#0b101c]/60 border-b border-white/[0.08] overflow-x-auto">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 block mb-2">
+        <div className="px-5 py-3 bg-[#08080a]/90 border-b border-white/10 overflow-x-auto">
+          <span className="text-[10px] font-mono uppercase tracking-wider text-neutral-500 block mb-2">
             Contextual Inquiries:
           </span>
           <div className="flex flex-wrap gap-1.5">
@@ -207,10 +207,10 @@ export const ContextAIDrawer: React.FC<ContextAIDrawerProps> = ({ isOpen, onClos
                 type="button"
                 onClick={() => handleSend(prompt)}
                 disabled={loading}
-                className="text-xs px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/[0.08] text-slate-300 hover:border-cyan-400/40 hover:bg-cyan-500/10 hover:text-cyan-300 transition flex items-center gap-1 text-left font-sans"
+                className="text-xs px-2.5 py-1 rounded-lg bg-white/[0.03] border border-white/15 text-neutral-300 hover:border-white/40 hover:bg-white/10 hover:text-white transition flex items-center gap-1 text-left font-sans"
               >
                 <span>{prompt}</span>
-                <FiArrowRight size={10} className="text-slate-500 shrink-0" />
+                <FiArrowRight size={10} className="text-neutral-500 shrink-0" />
               </button>
             ))}
           </div>
@@ -224,17 +224,17 @@ export const ContextAIDrawer: React.FC<ContextAIDrawerProps> = ({ isOpen, onClos
               className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}
             >
               <div className="flex items-center gap-2 mb-1 px-1 font-mono text-[10px]">
-                <span className={msg.sender === 'user' ? 'text-indigo-400 font-semibold' : 'text-cyan-400 font-semibold'}>
+                <span className="text-neutral-400 font-semibold">
                   {msg.sender === 'user' ? 'You' : 'Gemini Copilot'}
                 </span>
-                <span className="text-slate-500">{msg.time}</span>
+                <span className="text-neutral-500">{msg.time}</span>
               </div>
 
               <div
                 className={`p-4 rounded-2xl max-w-[90%] leading-relaxed ${
                   msg.sender === 'user'
-                    ? 'bg-gradient-to-r from-indigo-600 to-indigo-700 text-white rounded-br-xs shadow-md shadow-indigo-600/20'
-                    : 'bg-[#0b101c] border border-white/[0.08] text-slate-200 rounded-bl-xs shadow-lg'
+                    ? 'bg-white text-black font-medium rounded-br-xs shadow-md shadow-white/10'
+                    : 'bg-[#0c0c0e] border border-white/15 text-white rounded-bl-xs shadow-lg'
                 }`}
               >
                 <div className="whitespace-pre-wrap space-y-2">
@@ -292,8 +292,8 @@ export const ContextAIDrawer: React.FC<ContextAIDrawerProps> = ({ isOpen, onClos
           ))}
 
           {loading && (
-            <div className="flex items-center gap-2.5 p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-slate-300 text-xs w-fit animate-pulse">
-              <Sparkles className="text-cyan-400 animate-spin" size={14} />
+            <div className="flex items-center gap-2.5 p-3.5 rounded-xl bg-white/[0.04] border border-white/10 text-neutral-300 text-xs w-fit animate-pulse">
+              <Sparkles className="text-white animate-spin" size={14} />
               <span className="font-mono">Synthesizing workspace context...</span>
             </div>
           )}
@@ -302,7 +302,7 @@ export const ContextAIDrawer: React.FC<ContextAIDrawerProps> = ({ isOpen, onClos
         </div>
 
         {/* Input Bar */}
-        <div className="p-4 border-t border-white/[0.08] bg-[#0b101c]">
+        <div className="p-4 border-t border-white/10 bg-[#0c0c0e]">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -321,15 +321,15 @@ export const ContextAIDrawer: React.FC<ContextAIDrawerProps> = ({ isOpen, onClos
             <button
               type="submit"
               disabled={loading || !question.trim()}
-              className="p-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-cyan-500 text-white hover:opacity-95 disabled:opacity-40 disabled:cursor-not-allowed transition shrink-0 shadow-md shadow-indigo-500/20"
+              className="p-2.5 rounded-xl bg-white text-black hover:bg-neutral-200 disabled:opacity-40 disabled:cursor-not-allowed transition shrink-0 shadow-md shadow-white/10"
               title="Send (Enter)"
             >
               <FiSend size={14} />
             </button>
           </form>
-          <div className="flex items-center justify-between text-[10px] text-slate-500 mt-2 px-1 font-mono">
+          <div className="flex items-center justify-between text-[10px] text-neutral-500 mt-2 px-1 font-mono">
             <span>Google Gemini 1.5 Flash</span>
-            <span className="flex items-center gap-1 text-slate-400">
+            <span className="flex items-center gap-1 text-neutral-400">
               Press <FiCornerDownLeft size={9} /> to send
             </span>
           </div>
