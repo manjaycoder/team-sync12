@@ -6,7 +6,10 @@ import { store } from './app/routes/store.tsx';
 import AppRoutes from './app/routes/AppRoutes.tsx';
 import { ClerkProvider } from '@clerk/clerk-react';
 
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+const PUBLISHABLE_KEY =
+  import.meta.env.VITE_CLERK_PUBLISHABLE_KEY ||
+  import.meta.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ||
+  'pk_test_d2VhbHRoeS1vcnl4LTUzMjUuY2xlcmsuYWNjb3VudHMuZGV2JA';
 
 if (!PUBLISHABLE_KEY) {
   throw new Error('Missing Clerk Publishable Key — add VITE_CLERK_PUBLISHABLE_KEY to your .env.local file');
