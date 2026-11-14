@@ -1,0 +1,13 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/team-sync-test
+      auto-index-creation: false
+  main:
+    allow-bean-definition-overriding: true
+
+teamsync:
+  auto-seed: false
+  jwt:
+    secret: teamsync_test_secret_key_2026_at_least_32_bytes_long_mock_key!
+    expiration-ms: 3600000

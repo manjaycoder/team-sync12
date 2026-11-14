@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: teamsync-config
+  namespace: teamsync
+data:
+  PORT: "5001"
+  SPRING_PROFILES_ACTIVE: "prod"
+  AUTO_SEED: "true"
+  FRONTEND_URL: "https://manjaycoder.vercel.app,http://localhost:5173"

@@ -1,67 +1,95 @@
-services:
-  # Team-Sync Full-Stack Single-Instance Service
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: team_sync_app
-    restart: unless-stopped
-    ports:
-      - "5001:5001"
-    environment:
-      - NODE_ENV=production
-      - PORT=5001
-      - MONGO_URI=mongodb://mongo:27017/team-sync
-      - JWT_SECRET=teamsync_production_secret_key_docker_2026
-      - JWT_EXPIRES_IN=7d
-      - AUTO_SEED=false
-      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
-    depends_on:
-      mongo:
-        condition: service_healthy
-    networks:
-      - teamsync_network
+version: '3.8'
 
-  # MongoDB Official Container
-  mongo:
+services:
+  # ==========================================
+  # MongoDB 7.0 Database Container
+  # ==========================================
+  mongodb:
     image: mongo:7.0
-    container_name: team_sync_mongo
+    container_name: teamsync-mongodb
     restart: unless-stopped
     ports:
       - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: team-sync
     volumes:
-      - mongo_data:/data/db
+      - mongodb_data:/data/db
+    networks:
+      - teamsync-network
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 5s
-    networks:
-      - teamsync_network
 
-  # Optional Mongo Express Database Viewer
-  mongo-express:
-    image: mongo-express:latest
-    container_name: team_sync_mongo_express
+  # ==========================================
+  # Java 21 Spring Boot 3 Backend
+  # ==========================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: teamsync-backend
     restart: unless-stopped
     ports:
-      - "8081:8081"
+      - "5001:5001"
     environment:
-      - ME_CONFIG_MONGODB_SERVER=mongo
-      - ME_CONFIG_MONGODB_PORT=27017
-      - ME_CONFIG_BASICAUTH_USERNAME=admin
-      - ME_CONFIG_BASICAUTH_PASSWORD=pass
+      PORT: 5001
+      SPRING_PROFILES_ACTIVE: prod
+      MONGO_URI: mongodb://mongodb:27017/team-sync
+      JWT_SECRET: teamsync_jwt_super_secret_key_2026_production_ready_enterprise_level_hmac256_key
+      JWT_EXPIRATION_MS: 604800000
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      AUTO_SEED: "true"
+      FRONTEND_URL: "http://localhost:5173,https://manjaycoder.vercel.app"
     depends_on:
-      mongo:
+      mongodb:
         condition: service_healthy
     networks:
-      - teamsync_network
+      - teamsync-network
 
-networks:
-  teamsync_network:
-    driver: bridge
+  # ==========================================
+  # Prometheus Metrics Collector
+  # ==========================================
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    container_name: teamsync-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - teamsync-network
+    depends_on:
+      - backend
+
+  # ==========================================
+  # Grafana Monitoring Dashboard
+  # ==========================================
+  grafana:
+    image: grafana/grafana:11.1.0
+    container_name: teamsync-grafana
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - teamsync-network
+    depends_on:
+      - prometheus
 
 volumes:
-  mongo_data:
-    driver: local
+  mongodb_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  teamsync-network:
+    driver: bridge
