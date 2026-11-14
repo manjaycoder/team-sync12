@@ -2,6 +2,32 @@ import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/tool
 import { axiosInstance } from '../../../config/axiosInstance';
 import { fetchProjects } from './projectSlice';
 
+export interface ChecklistItemRecord {
+  id: string;
+  title: string;
+  completed: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface AcceptanceCriterionRecord {
+  id: string;
+  description: string;
+  completed: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface AttachmentRecord {
+  id: string;
+  fileName: string;
+  fileType: string;
+  fileSize: number;
+  fileUrl: string;
+  uploadedBy: string;
+  uploadedAt: string;
+}
+
 export interface TaskRecord {
   id: string;
   title: string;
@@ -21,6 +47,9 @@ export interface TaskRecord {
   completedByAI?: boolean;
   aiCompletionSummary?: string;
   completedAt?: string;
+  checklist?: ChecklistItemRecord[];
+  acceptanceCriteria?: AcceptanceCriterionRecord[];
+  attachments?: AttachmentRecord[];
 }
 
 interface TaskState {

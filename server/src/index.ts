@@ -66,6 +66,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Static file uploads serving for task attachments
+const uploadsDir = path.resolve(process.cwd(), 'server/uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+app.use('/uploads', express.static(uploadsDir));
+
 // Health check endpoint for Render & Docker monitoring
 app.get('/api/health', (_req: Request, res: Response) => {
   res.status(200).json({

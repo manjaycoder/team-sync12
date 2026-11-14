@@ -16,6 +16,9 @@ import {
   deleteTaskApi,
   type TaskRecord,
 } from '../state/taskSlice';
+import TaskChecklistSection from './TaskChecklistSection';
+import TaskAcceptanceCriteriaSection from './TaskAcceptanceCriteriaSection';
+import TaskAttachmentsSection from './TaskAttachmentsSection';
 import {
   FiPlus,
   FiSearch,
@@ -72,15 +75,7 @@ export const ProjectsWorkspace: React.FC = () => {
   const [selectedTask, setSelectedTask] = useState<TaskRecord | null>(null);
   const [aiLoadingTaskId, setAiLoadingTaskId] = useState<string | null>(null);
 
-  // Mock comments & checklists state mapped by task id
-  const [taskChecklists, setTaskChecklists] = useState<Record<string, { id: string; text: string; done: boolean }[]>>({
-    default: [
-      { id: '1', text: 'Architecture specification review', done: true },
-      { id: '2', text: 'API integration endpoints verified', done: false },
-      { id: '3', text: 'Unit and end-to-end regression pass', done: false },
-    ],
-  });
-
+  // Mock comments state mapped by task id
   const [taskComments, setTaskComments] = useState<Record<string, CommentItem[]>>({
     default: [
       {
@@ -94,7 +89,6 @@ export const ProjectsWorkspace: React.FC = () => {
   });
 
   const [newCommentText, setNewCommentText] = useState('');
-  const [newChecklistText, setNewChecklistText] = useState('');
 
   // Forms state
   const [taskForm, setTaskForm] = useState({
@@ -107,6 +101,7 @@ export const ProjectsWorkspace: React.FC = () => {
     priority: 'medium' as TaskRecord['priority'],
     dueDate: 'Nov 20, 2026',
     estimatedHours: 8,
+    acceptanceCriteriaText: '',
   });
 
   const [projectForm, setProjectForm] = useState({
@@ -211,42 +206,18 @@ export const ProjectsWorkspace: React.FC = () => {
     setNewCommentText('');
   };
 
-  // Add Checklist Item
-  const handleAddChecklist = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newChecklistText.trim() || !selectedTask) return;
-
-    const tId = selectedTask.id;
-    const newItem = {
-      id: `chk-${Date.now()}`,
-      text: newChecklistText,
-      done: false,
-    };
-
-    setTaskChecklists((prev) => ({
-      ...prev,
-      [tId]: [...(prev[tId] || prev['default'] || []), newItem],
-    }));
-    setNewChecklistText('');
-  };
-
-  // Toggle Checklist
-  const toggleChecklist = (taskId: string, itemId: string) => {
-    setTaskChecklists((prev) => {
-      const currentList = prev[taskId] || prev['default'] || [];
-      return {
-        ...prev,
-        [taskId]: currentList.map((item) =>
-          item.id === itemId ? { ...item, done: !item.done } : item
-        ),
-      };
-    });
-  };
-
   // Create Task Form Submit
   const handleCreateTask = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!taskForm.title.trim()) return;
+
+    const initialCriteria = taskForm.acceptanceCriteriaText
+      ? taskForm.acceptanceCriteriaText
+          .split('\n')
+          .map((l) => l.trim())
+          .filter(Boolean)
+          .map((desc) => ({ id: `crit-${Date.now()}`, description: desc, completed: false }))
+      : [];
 
     await dispatch(
       createTaskApi({
@@ -263,6 +234,9 @@ export const ProjectsWorkspace: React.FC = () => {
         dueDate: taskForm.dueDate,
         estimatedHours: Number(taskForm.estimatedHours) || 8,
         status: 'todo',
+        acceptanceCriteria: initialCriteria,
+        checklist: [],
+        attachments: [],
       })
     );
 
@@ -276,6 +250,7 @@ export const ProjectsWorkspace: React.FC = () => {
       priority: 'medium',
       dueDate: 'Nov 20, 2026',
       estimatedHours: 8,
+      acceptanceCriteriaText: '',
     });
     setIsCreateTaskModalOpen(false);
   };
@@ -968,49 +943,32 @@ export const ProjectsWorkspace: React.FC = () => {
                 )}
               </div>
 
-              {/* Checklist Section */}
-              <div>
-                <div className="flex items-center justify-between mb-2.5">
-                  <span className="font-bold text-white font-display">Checklist &amp; Acceptance Criteria</span>
-                  <span className="text-[11px] font-mono text-slate-400">
-                    {(taskChecklists[selectedTask.id] || taskChecklists['default'] || []).filter((c) => c.done).length} /{' '}
-                    {(taskChecklists[selectedTask.id] || taskChecklists['default'] || []).length} completed
-                  </span>
-                </div>
+              {/* 1. Persistent Checklist Section */}
+              <TaskChecklistSection
+                taskId={selectedTask.id}
+                initialChecklist={selectedTask.checklist || []}
+                onUpdate={(items) => {
+                  setSelectedTask((prev) => (prev ? { ...prev, checklist: items } : prev));
+                }}
+              />
 
-                <div className="space-y-2">
-                  {(taskChecklists[selectedTask.id] || taskChecklists['default'] || []).map((chk) => (
-                    <div
-                      key={chk.id}
-                      onClick={() => toggleChecklist(selectedTask.id, chk.id)}
-                      className="flex items-center gap-2.5 p-2.5 rounded-xl border border-white/10 bg-white/[0.02] cursor-pointer hover:bg-white/[0.05] transition"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={chk.done}
-                        onChange={() => {}}
-                        className="rounded border-white/20 bg-slate-900 text-indigo-600 focus:ring-indigo-500"
-                      />
-                      <span className={`text-xs ${chk.done ? 'line-through text-slate-500' : 'text-slate-200'}`}>
-                        {chk.text}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+              {/* 2. Persistent Acceptance Criteria Section */}
+              <TaskAcceptanceCriteriaSection
+                taskId={selectedTask.id}
+                initialCriteria={selectedTask.acceptanceCriteria || []}
+                onUpdate={(items) => {
+                  setSelectedTask((prev) => (prev ? { ...prev, acceptanceCriteria: items } : prev));
+                }}
+              />
 
-                <form onSubmit={handleAddChecklist} className="flex gap-2 mt-2.5">
-                  <input
-                    type="text"
-                    placeholder="Add checklist item..."
-                    value={newChecklistText}
-                    onChange={(e) => setNewChecklistText(e.target.value)}
-                    className="ts-input flex-1 py-1.5 text-xs"
-                  />
-                  <button type="submit" className="ts-btn-secondary text-xs py-1.5">
-                    Add
-                  </button>
-                </form>
-              </div>
+              {/* 3. Persistent File Attachments Section */}
+              <TaskAttachmentsSection
+                taskId={selectedTask.id}
+                initialAttachments={selectedTask.attachments || []}
+                onUpdate={(items) => {
+                  setSelectedTask((prev) => (prev ? { ...prev, attachments: items } : prev));
+                }}
+              />
 
               {/* Collaboration Comments Thread with Mentions (@) */}
               <div>
@@ -1113,10 +1071,24 @@ export const ProjectsWorkspace: React.FC = () => {
                 <label className="block text-slate-300 font-medium mb-1.5 font-sans">Description</label>
                 <textarea
                   rows={2}
-                  placeholder="Details, acceptance criteria..."
+                  placeholder="Task overview and deliverables..."
                   value={taskForm.description}
                   onChange={(e) => setTaskForm({ ...taskForm, description: e.target.value })}
                   className="ts-input w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-300 font-medium mb-1.5 font-sans flex items-center justify-between">
+                  <span>Initial Acceptance Criteria</span>
+                  <span className="text-[10px] text-slate-500 font-normal">Optional · One per line</span>
+                </label>
+                <textarea
+                  rows={2}
+                  placeholder="e.g. Pass 100% test coverage&#10;Verified on staging cluster"
+                  value={taskForm.acceptanceCriteriaText}
+                  onChange={(e) => setTaskForm({ ...taskForm, acceptanceCriteriaText: e.target.value })}
+                  className="ts-input w-full font-mono text-xs"
                 />
               </div>
 
