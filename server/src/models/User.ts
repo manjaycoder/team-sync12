@@ -6,6 +6,8 @@ export interface IUser extends Document {
   email: string;
   password?: string;
   role: string;
+  companyId: string;
+  companyName: string;
   department: string;
   status: 'active' | 'remote' | 'on_leave';
   avatar: string;
@@ -37,6 +39,15 @@ const UserSchema = new Schema<IUser>(
     role: {
       type: String,
       default: 'Team Member',
+    },
+    companyId: {
+      type: String,
+      default: 'teamsync-default',
+      index: true,
+    },
+    companyName: {
+      type: String,
+      default: 'TeamSync Technologies',
     },
     department: {
       type: String,

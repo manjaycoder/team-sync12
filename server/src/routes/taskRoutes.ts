@@ -7,13 +7,17 @@ import {
   deleteTask,
   aiCompleteTask,
 } from '../controllers/taskController';
-import { protect } from '../middleware/authMiddleware';
+import { protect, authorize } from '../middleware/authMiddleware';
 
 const router = Router();
 
 router.use(protect);
 router.route('/').get(getTasks).post(createTask);
 router.post('/:id/ai-complete', aiCompleteTask);
-router.route('/:id').get(getTaskById).put(updateTask).delete(deleteTask);
+router
+  .route('/:id')
+  .get(getTaskById)
+  .put(updateTask)
+  .delete(authorize('admin', 'manager', 'company_owner', 'super_admin'), deleteTask);
 
 export default router;

@@ -3,6 +3,7 @@ import mongoose, { Document, Schema, Model } from 'mongoose';
 export interface ITask extends Document {
   title: string;
   description: string;
+  companyId?: string;
   projectId?: mongoose.Types.ObjectId;
   projectName: string;
   department: string;
@@ -31,6 +32,11 @@ const TaskSchema = new Schema<ITask>(
       type: String,
       default: '',
       trim: true,
+    },
+    companyId: {
+      type: String,
+      default: 'teamsync-default',
+      index: true,
     },
     projectId: {
       type: Schema.Types.ObjectId,

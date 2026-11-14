@@ -17,6 +17,7 @@
     "build:client": "tsc -b && vite build",
     "build:server": "npm --prefix server run build",
     "build": "npm run build:client && npm run build:server",
+    "start": "node server/dist/index.js",
     "render-build": "npm install && npm run build:client && npm --prefix server install && npm run build:server",
     "dev": "node server/dist/index.js",
     "seed": "npm --prefix server run seed",

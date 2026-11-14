@@ -50,3 +50,33 @@ export const protect = async (
     res.status(401).json({ message: 'Session expired or invalid token' });
   }
 };
+
+/**
+ * Role-Based Access Control (RBAC) Middleware.
+ * Enforces permissions for Super Admin, Company Owner, Admin, Manager, and Employee.
+ */
+export const authorize = (...roles: string[]) => {
+  return (req: AuthRequest, res: Response, next: NextFunction): void => {
+    if (!req.user) {
+      res.status(401).json({ message: 'User not authenticated' });
+      return;
+    }
+
+    const userRole = (req.user.role || 'employee').toLowerCase().replace(/\s+/g, '_');
+    const allowed = roles.map((r) => r.toLowerCase().replace(/\s+/g, '_'));
+
+    // Super Admin & Company Owner always have full privileges
+    if (userRole === 'super_admin' || userRole === 'company_owner' || userRole === 'admin') {
+      return next();
+    }
+
+    if (!allowed.includes(userRole)) {
+      res.status(403).json({
+        message: `Forbidden: User role '${req.user.role}' is not authorized to access this resource`,
+      });
+      return;
+    }
+
+    next();
+  };
+};
