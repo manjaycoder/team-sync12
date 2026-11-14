@@ -29,16 +29,96 @@ interface TaskState {
   selectedFilter: 'all' | 'my_tasks';
 }
 
+export const INITIAL_TASKS: TaskRecord[] = [
+  {
+    id: 'task-01',
+    title: 'Architect MongoDB aggregation pipelines for telemetry',
+    description: 'Implement efficient Spring Data aggregation queries for real-time workload calculations.',
+    projectName: 'Java Spring Boot Modular Monolith',
+    department: 'Engineering',
+    assigneeName: 'Alex Morgan',
+    assigneeEmail: 'alex.morgan@team-sync.space',
+    assigneeAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    status: 'completed',
+    priority: 'urgent',
+    dueDate: 'Nov 20, 2026',
+    estimatedHours: 12,
+    completedByAI: true,
+    aiCompletionSummary: 'Pipeline architecture verified with 100% throughput performance on MongoDB replica set.',
+    completedAt: 'Nov 14, 2026',
+  },
+  {
+    id: 'task-02',
+    title: 'Implement Spring AI tool calling for agent chatbot',
+    description: 'Expose controlled application service tools for answering questions without direct DB exposure.',
+    projectName: 'Quantum Mesh Neural Engine',
+    department: 'AI Research',
+    assigneeName: 'Elena Rostova',
+    assigneeEmail: 'elena.r@team-sync.space',
+    assigneeAvatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
+    status: 'in_progress',
+    priority: 'high',
+    dueDate: 'Nov 22, 2026',
+    estimatedHours: 16,
+  },
+  {
+    id: 'task-03',
+    title: 'Optimize Three.js WebGL canvas LOD and frame rates',
+    description: 'Fine-tune React Three Fiber geometries, camera damping, and GPU buffer management.',
+    projectName: 'Monochromatic Awwwards Design System',
+    department: 'Product & Design',
+    assigneeName: 'Marcus Chen',
+    assigneeEmail: 'marcus.c@team-sync.space',
+    assigneeAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+    status: 'completed',
+    priority: 'medium',
+    dueDate: 'Nov 18, 2026',
+    estimatedHours: 10,
+    completedAt: 'Nov 12, 2026',
+  },
+  {
+    id: 'task-04',
+    title: 'Configure Prometheus and Grafana metrics dashboards',
+    description: 'Export Micrometer metrics from Spring Boot Actuator and create monitoring panels.',
+    projectName: 'Enterprise SOC2 Telemetry Vault',
+    department: 'Operations & Security',
+    assigneeName: 'David Kim',
+    assigneeEmail: 'david.k@team-sync.space',
+    assigneeAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+    status: 'in_progress',
+    priority: 'high',
+    dueDate: 'Nov 25, 2026',
+    estimatedHours: 14,
+  },
+  {
+    id: 'task-05',
+    title: 'Verify multi-tenant company data isolation filters',
+    description: 'Ensure ThreadLocal companyId context prevents unauthorized cross-tenant data access.',
+    projectName: 'Java Spring Boot Modular Monolith',
+    department: 'Engineering',
+    assigneeName: 'Sophia Al-Mansoor',
+    assigneeEmail: 'sophia.a@team-sync.space',
+    assigneeAvatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
+    status: 'todo',
+    priority: 'urgent',
+    dueDate: 'Nov 28, 2026',
+    estimatedHours: 8,
+  },
+];
+
 export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async () => {
   try {
     const res = await axiosInstance.get('/tasks');
     const data = res.data as any[];
-    return data.map((t) => ({
-      ...t,
-      id: t.id || t._id,
-    })) as TaskRecord[];
+    if (Array.isArray(data) && data.length > 0) {
+      return data.map((t) => ({
+        ...t,
+        id: t.id || t._id,
+      })) as TaskRecord[];
+    }
+    return INITIAL_TASKS;
   } catch {
-    return [];
+    return INITIAL_TASKS;
   }
 });
 
@@ -128,7 +208,7 @@ export const deleteTaskApi = createAsyncThunk(
 );
 
 const initialState: TaskState = {
-  tasks: [],
+  tasks: INITIAL_TASKS,
   isLoading: false,
   selectedFilter: 'all',
 };

@@ -21,16 +21,88 @@ interface EmployeeState {
   isLoading: boolean;
 }
 
+export const INITIAL_EMPLOYEES: EmployeeRecord[] = [
+  {
+    id: 'emp-01',
+    name: 'Alex Morgan',
+    email: 'alex.morgan@team-sync.space',
+    role: 'Lead Systems Architect',
+    department: 'Engineering',
+    status: 'active',
+    location: 'San Francisco, CA',
+    joinedDate: 'Jan 2025',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'emp-02',
+    name: 'Elena Rostova',
+    email: 'elena.r@team-sync.space',
+    role: 'Principal AI Scientist',
+    department: 'AI Research',
+    status: 'remote',
+    location: 'Zurich, Switzerland',
+    joinedDate: 'Mar 2025',
+    avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'emp-03',
+    name: 'Marcus Chen',
+    email: 'marcus.c@team-sync.space',
+    role: 'Staff Product Designer',
+    department: 'Product & Design',
+    status: 'active',
+    location: 'Tokyo, Japan',
+    joinedDate: 'Jun 2025',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'emp-04',
+    name: 'David Kim',
+    email: 'david.k@team-sync.space',
+    role: 'Head of Infrastructure',
+    department: 'Operations & Security',
+    status: 'active',
+    location: 'Austin, TX',
+    joinedDate: 'Feb 2025',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'emp-05',
+    name: 'Priya Sharma',
+    email: 'priya.s@team-sync.space',
+    role: 'Director of Growth',
+    department: 'Marketing & Growth',
+    status: 'remote',
+    location: 'London, UK',
+    joinedDate: 'May 2025',
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+  },
+  {
+    id: 'emp-06',
+    name: 'Sophia Al-Mansoor',
+    email: 'sophia.a@team-sync.space',
+    role: 'Senior Full-Stack Engineer',
+    department: 'Engineering',
+    status: 'active',
+    location: 'New York, NY',
+    joinedDate: 'Aug 2025',
+    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
+  },
+];
+
 const loadInitial = (): EmployeeRecord[] => {
-  return [];
+  return INITIAL_EMPLOYEES;
 };
 
 export const fetchEmployees = createAsyncThunk('employee/fetchAll', async () => {
   try {
     const res = await axiosInstance.get('/employees');
-    return res.data as EmployeeRecord[];
+    if (Array.isArray(res.data) && res.data.length > 0) {
+      return res.data as EmployeeRecord[];
+    }
+    return INITIAL_EMPLOYEES;
   } catch {
-    return loadInitial();
+    return INITIAL_EMPLOYEES;
   }
 });
 
