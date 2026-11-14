@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense } from 'react';
+import { useState, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Sparkles,
@@ -10,9 +10,13 @@ import {
   Bot,
 } from 'lucide-react';
 import { TS3DCard } from './TS3DCard';
+import { lazyWithRetry } from '../../../../shared/utils/lazyWithRetry';
+import { ErrorBoundary } from '../../../../shared/ui/ErrorBoundary';
+import { Spatial3DFallback } from '../../../../shared/ui/Spatial3DFallback';
 
-const WorkspaceModel3D = lazy(() =>
-  import('./3d/WorkspaceModel').then((m) => ({ default: m.WorkspaceModel3D }))
+const WorkspaceModel3D = lazyWithRetry(
+  () => import('./3d/WorkspaceModel').then((m) => ({ default: m.WorkspaceModel3D })),
+  'workspace_model_3d'
 );
 
 type DemoTab = 'kanban' | 'copilot' | 'spatial';
@@ -153,11 +157,10 @@ export const TSInteractiveDemo = () => {
                   key={tab.id}
                   type="button"
                   onClick={() => setActiveTab(tab.id as DemoTab)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold transition-all ${
-                    activeTab === tab.id
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold transition-all ${activeTab === tab.id
                       ? 'bg-white text-black shadow-lg shadow-white/20'
                       : 'text-neutral-400 hover:text-white'
-                  }`}
+                    }`}
                 >
                   <Icon size={14} />
                   <span>{tab.label}</span>
@@ -259,11 +262,10 @@ export const TSInteractiveDemo = () => {
                             <div className="flex items-center justify-between mb-2">
                               <span className="text-[9px] font-mono text-neutral-400">{task.id}</span>
                               <span
-                                className={`text-[9px] font-mono px-2 py-0.5 rounded-full border ${
-                                  task.priority === 'Urgent'
+                                className={`text-[9px] font-mono px-2 py-0.5 rounded-full border ${task.priority === 'Urgent'
                                     ? 'bg-white/15 text-white border-white/30 font-bold'
                                     : 'bg-white/5 text-neutral-300 border-white/10'
-                                }`}
+                                  }`}
                               >
                                 {task.priority}
                               </span>
@@ -355,11 +357,10 @@ export const TSInteractiveDemo = () => {
                     type="button"
                     onClick={() => triggerPrompt(q)}
                     disabled={aiThinking}
-                    className={`px-3.5 py-2 rounded-xl text-xs font-medium border transition-all ${
-                      aiPrompt === q
+                    className={`px-3.5 py-2 rounded-xl text-xs font-medium border transition-all ${aiPrompt === q
                         ? 'bg-white text-black border-white font-semibold'
                         : 'bg-white/5 border-white/10 text-neutral-300 hover:border-white/30 hover:bg-white/10'
-                    }`}
+                      }`}
                   >
                     {q}
                   </button>
@@ -424,18 +425,21 @@ export const TSInteractiveDemo = () => {
                 </span>
               </div>
 
-              <div className="h-[360px] w-full rounded-2xl bg-black border border-white/10 overflow-hidden relative">
-                <Suspense
-                  fallback={
-                    <div className="w-full h-full flex items-center justify-center">
-                      <div className="w-20 h-20 rounded-xl border border-white/20 animate-spin" />
-                    </div>
-                  }
-                >
-                  <WorkspaceModel3D />
-                </Suspense>
+              <div className="h-[360px] w-full rounded-2xl bg-[#080D1A] border border-white/10 overflow-hidden relative">
+                <ErrorBoundary fallback={<Spatial3DFallback type="workspace" height={360} />} scope="WorkspaceModel3D">
+                  <Suspense
+                    fallback={
+                      <div className="w-full h-full flex flex-col items-center justify-center gap-3">
+                        <div className="w-14 h-14 rounded-2xl border-2 border-blue-500/30 border-t-blue-400 animate-spin" />
+                        <span className="text-xs font-mono text-neutral-400">Loading 3D Spatial Engine...</span>
+                      </div>
+                    }
+                  >
+                    <WorkspaceModel3D />
+                  </Suspense>
+                </ErrorBoundary>
 
-                <div className="absolute bottom-3 right-3 text-[10px] font-mono bg-black/80 px-2.5 py-1 rounded border border-white/10 text-neutral-400">
+                <div className="absolute bottom-3 right-3 text-[10px] font-mono bg-black/80 px-2.5 py-1 rounded border border-white/10 text-neutral-400 pointer-events-none">
                   CLICK &amp; DRAG TO ORBIT
                 </div>
               </div>

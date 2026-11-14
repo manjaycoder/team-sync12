@@ -9,6 +9,7 @@ import AICopilotPage from '../features/ai/ui/AICopilotPage';
 import Settings from '../features/dashboard/ui/pages/Settings';
 import PublicWebsite from '../features/public/ui/PublicWebsite';
 import AwwwardsLoader from '../shared/ui/AwwwardsLoader';
+import RouteErrorElement from '../shared/ui/RouteErrorElement';
 import { ArrowLeft, ShieldCheck, Zap, Bot, Users, CheckCircle2 } from 'lucide-react';
 
 // ─── Protected: redirect to Clerk's sign-in if not authenticated ─────────────
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
   // ── Public marketing page ───────────────────────────────────────────────────
   {
     path: '/',
+    errorElement: <RouteErrorElement />,
     element: (
       <PublicOnlyRoutes>
         <PublicWebsite />
@@ -47,6 +49,7 @@ const router = createBrowserRouter([
   // They redirect back to /home after success.
   {
     path: '/sign-in',
+    errorElement: <RouteErrorElement />,
     element: (
       <PublicOnlyRoutes>
         <ClerkSignInPage />
@@ -55,6 +58,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/sign-up',
+    errorElement: <RouteErrorElement />,
     element: (
       <PublicOnlyRoutes>
         <ClerkSignUpPage />
@@ -65,6 +69,7 @@ const router = createBrowserRouter([
   // ── Authenticated dashboard ─────────────────────────────────────────────────
   {
     path: '/home',
+    errorElement: <RouteErrorElement />,
     element: (
       <ProtectedRoutes>
         <DashboardLayout />

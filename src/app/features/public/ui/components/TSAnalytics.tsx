@@ -1,13 +1,17 @@
-import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
 import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
   BarChart, Bar
 } from 'recharts';
 import { TrendingUp, Activity, CheckCircle2 } from 'lucide-react';
 import { TS3DCard } from './TS3DCard';
+import { lazyWithRetry } from '../../../../shared/utils/lazyWithRetry';
+import { ErrorBoundary } from '../../../../shared/ui/ErrorBoundary';
+import { Spatial3DFallback } from '../../../../shared/ui/Spatial3DFallback';
 
-const AnalyticsDashboard3D = lazy(() =>
-  import('./3d/AnalyticsDashboard3D').then((m) => ({ default: m.AnalyticsDashboard3D }))
+const AnalyticsDashboard3D = lazyWithRetry(
+  () => import('./3d/AnalyticsDashboard3D').then((m) => ({ default: m.AnalyticsDashboard3D })),
+  'analytics_dashboard_3d'
 );
 
 const velocityData = [
@@ -66,15 +70,18 @@ export const TSAnalytics = () => {
               </div>
 
               <div className="relative h-[270px] w-full my-4">
-                <Suspense
-                  fallback={
-                    <div className="w-full h-full flex items-center justify-center">
-                      <div className="w-24 h-24 rounded-full border border-white/20 animate-spin" />
-                    </div>
-                  }
-                >
-                  <AnalyticsDashboard3D />
-                </Suspense>
+                <ErrorBoundary fallback={<Spatial3DFallback type="analytics" height={270} />} scope="AnalyticsDashboard3D">
+                  <Suspense
+                    fallback={
+                      <div className="w-full h-full flex flex-col items-center justify-center gap-2">
+                        <div className="w-16 h-16 rounded-full border-2 border-blue-500/30 border-t-blue-400 animate-spin" />
+                        <span className="text-[10px] font-mono text-neutral-400">Rendering Metrics Simulation...</span>
+                      </div>
+                    }
+                  >
+                    <AnalyticsDashboard3D />
+                  </Suspense>
+                </ErrorBoundary>
               </div>
 
               <div className="pt-3 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-neutral-400">

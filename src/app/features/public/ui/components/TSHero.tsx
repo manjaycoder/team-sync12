@@ -1,11 +1,15 @@
-import { useRef, useEffect, lazy, Suspense } from 'react';
+import { useRef, useEffect, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ArrowRight, Play, Users, Zap, Shield, TrendingUp } from 'lucide-react';
 import { TS3DCard } from './TS3DCard';
+import { lazyWithRetry } from '../../../../shared/utils/lazyWithRetry';
+import { ErrorBoundary } from '../../../../shared/ui/ErrorBoundary';
+import { Spatial3DFallback } from '../../../../shared/ui/Spatial3DFallback';
 
-const CollaborationNetwork3D = lazy(() =>
-  import('./3d/CollaborationNetwork').then((m) => ({ default: m.CollaborationNetwork3D }))
+const CollaborationNetwork3D = lazyWithRetry(
+  () => import('./3d/CollaborationNetwork').then((m) => ({ default: m.CollaborationNetwork3D })),
+  'collaboration_network_3d'
 );
 
 const stats = [
@@ -173,17 +177,20 @@ export const TSHero = () => {
                   </span>
                 </div>
 
-                {/* Embedded 3D Canvas */}
+                {/* Embedded 3D Canvas with Graceful Error Boundary */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <Suspense
-                    fallback={
-                      <div className="w-full h-full flex items-center justify-center">
-                        <div className="w-28 h-28 rounded-full border border-white/20 animate-spin" />
-                      </div>
-                    }
-                  >
-                    <CollaborationNetwork3D />
-                  </Suspense>
+                  <ErrorBoundary fallback={<Spatial3DFallback type="network" />} scope="CollaborationNetwork3D">
+                    <Suspense
+                      fallback={
+                        <div className="w-full h-full flex flex-col items-center justify-center gap-2">
+                          <div className="w-16 h-16 rounded-full border-2 border-blue-500/30 border-t-blue-400 animate-spin" />
+                          <span className="text-[10px] font-mono text-neutral-400">Loading Network Mesh...</span>
+                        </div>
+                      }
+                    >
+                      <CollaborationNetwork3D />
+                    </Suspense>
+                  </ErrorBoundary>
                 </div>
 
                 {/* 3D Footer status */}
