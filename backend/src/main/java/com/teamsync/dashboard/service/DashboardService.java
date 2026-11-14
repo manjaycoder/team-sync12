@@ -100,35 +100,49 @@ public class DashboardService {
                 ? userRepository.findAllByCompanyId(companyId)
                 : userRepository.findAll();
 
-        // MongoDB Aggregation: group tasks by assigneeEmail
-        List<Aggregation> pipeline = new ArrayList<>();
+        // 1. MongoDB Aggregation: group total tasks by assigneeEmail
+        List<org.springframework.data.mongodb.core.aggregation.AggregationOperation> totalOps = new ArrayList<>();
         if (StringUtils.hasText(companyId)) {
-            pipeline.add(match(Criteria.where("companyId").is(companyId)));
+            totalOps.add(match(Criteria.where("companyId").is(companyId)));
         }
+        totalOps.add(group("assigneeEmail").count().as("totalTasks"));
 
-        Aggregation aggregation = newAggregation(
-                StringUtils.hasText(companyId) ? match(Criteria.where("companyId").is(companyId)) : match(new Criteria()),
-                group("assigneeEmail")
-                        .count().as("totalTasks")
-                        .sum(new Document("$cond", Arrays.asList(new Document("$eq", Arrays.asList("$status", "completed")), 1, 0))).as("completedTasks")
-        );
+        Aggregation totalAgg = newAggregation(totalOps);
+        AggregationResults<Document> totalResults = mongoTemplate.aggregate(totalAgg, "tasks", Document.class);
 
-        AggregationResults<Document> results = mongoTemplate.aggregate(aggregation, "tasks", Document.class);
-        Map<String, Document> taskStatsByEmail = new HashMap<>();
-        for (Document doc : results.getMappedResults()) {
+        Map<String, Long> totalTasksByEmail = new HashMap<>();
+        for (Document doc : totalResults.getMappedResults()) {
             String email = doc.getString("_id");
             if (email != null) {
-                taskStatsByEmail.put(email.toLowerCase(), doc);
+                totalTasksByEmail.put(email.toLowerCase(), ((Number) doc.getOrDefault("totalTasks", 0)).longValue());
+            }
+        }
+
+        // 2. MongoDB Aggregation: group completed tasks by assigneeEmail
+        List<org.springframework.data.mongodb.core.aggregation.AggregationOperation> compOps = new ArrayList<>();
+        if (StringUtils.hasText(companyId)) {
+            compOps.add(match(Criteria.where("companyId").is(companyId).and("status").is("completed")));
+        } else {
+            compOps.add(match(Criteria.where("status").is("completed")));
+        }
+        compOps.add(group("assigneeEmail").count().as("completedTasks"));
+
+        Aggregation compAgg = newAggregation(compOps);
+        AggregationResults<Document> compResults = mongoTemplate.aggregate(compAgg, "tasks", Document.class);
+
+        Map<String, Long> completedTasksByEmail = new HashMap<>();
+        for (Document doc : compResults.getMappedResults()) {
+            String email = doc.getString("_id");
+            if (email != null) {
+                completedTasksByEmail.put(email.toLowerCase(), ((Number) doc.getOrDefault("completedTasks", 0)).longValue());
             }
         }
 
         List<EmployeeWorkloadDto> list = new ArrayList<>();
         for (User u : employees) {
             String email = u.getEmail() != null ? u.getEmail().toLowerCase() : "";
-            Document doc = taskStatsByEmail.get(email);
-
-            long total = doc != null ? ((Number) doc.getOrDefault("totalTasks", 0)).longValue() : 0;
-            long completed = doc != null ? ((Number) doc.getOrDefault("completedTasks", 0)).longValue() : 0;
+            long total = totalTasksByEmail.getOrDefault(email, 0L);
+            long completed = completedTasksByEmail.getOrDefault(email, 0L);
             long active = Math.max(0, total - completed);
 
             // Workload index: 1 active task = ~25% capacity
