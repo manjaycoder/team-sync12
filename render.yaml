@@ -1,29 +1,27 @@
 # Render Blueprint Infrastructure Specification
-# Single-Instance Full-Stack Deployment (React Vite + Express Node.js)
+# Java 21 + Spring Boot 3 Modular Monolith Deployment
 # Docs: https://render.com/docs/blueprint-spec
 
 services:
   - type: web
     name: team-sync
-    runtime: node
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
     plan: free
     region: oregon
-    buildCommand: npm run render-build
-    startCommand: npm start
     healthCheckPath: /api/health
-    autoDeploy: false
+    autoDeploy: true
     envVars:
-      - key: NODE_ENV
-        value: production
       - key: PORT
-        value: 10000
+        value: 5001
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
       - key: MONGO_URI
         sync: false
       - key: JWT_SECRET
         generateValue: true
-      - key: JWT_EXPIRES_IN
-        value: 7d
       - key: GEMINI_API_KEY
         sync: false
-      - key: AUTO_SEED
-        value: "false"
+      - key: FRONTEND_URL
+        value: https://manjaycoder.vercel.app
